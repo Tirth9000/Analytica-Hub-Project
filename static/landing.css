@@ -1,0 +1,113 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #fdfdfd;
+  padding: 15px 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.navbar-logo {
+  height: 40px;
+  margin-right: auto;
+}
+
+#home {
+  background-color: rgb(237, 236, 236);
+  text-align: center;
+}
+
+.home-img {
+  max-width: 100%;   /* Make image responsive */
+  width: 600px;      /* Set a base width for the image */
+  height: auto;      /* Maintain aspect ratio */
+  margin-top: 40px;  /* Space between the text and image */
+  border-radius: 10px;
+}
+
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  margin-right: 25px;
+  gap: 20px;
+}
+
+.navbar-menu li a {
+  color: #333;
+  text-decoration: none;
+  padding: 8px 12px;
+  font-weight: 500;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  border-radius: 5px;
+}
+
+.navbar-menu li a:hover,
+.navbar-menu li a.active {
+  color: #fff;
+  background-color: #0073e6;
+}
+
+/* Navbar Buttons */
+.navbar-buttons .login-btn,
+.navbar-buttons .signup-btn {
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.navbar-buttons .login-btn {
+  background: none;
+  color: #0073e6;
+  border: 1px solid #0073e6;
+}
+
+.navbar-buttons .signup-btn {
+  background-color: #0073e6;
+  color: #fff;
+  margin-left: 10px;
+}
+
+.navbar-buttons .login-btn:hover {
+  background-color: #0073e6;
+  color: #fff;
+}
+
+.navbar-buttons .signup-btn:hover {
+  background-color: #005bb5;
+}
+
+/* Section Styling */
+.section {
+  padding: 100px 20px;
+  /* margin-top: 80px; */
+}
+
+#home h1 {
+  font-weight: 1500;
+  font-size: 40px;
+}
+
+/* Active Link Styling */
+.nav-link.active {
+  color: #fff;
+  background-color: #0073e6;
+  border-radius: 5px;
+}
