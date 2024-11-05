@@ -3,4 +3,4 @@ from templates import *
 
 # Create your views here.
 def LandingPage(request):
-    return render(request, 'landing1.html')
+    return render(request, 'landing.html')
