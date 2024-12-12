@@ -3,30 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upload Datasets</title>
+  <title>Upload CSV and Excel Files</title>
   <link rel="stylesheet" href="/static/upload_file.css">
 </head>
 <body>
   <div class="container">
-    <!-- Page Title -->
+    <!-- Page Header -->
     <div class="header">
-      <h1>Upload Your Datasets</h1>
+      <h1>Upload Your Files</h1>
     </div>
 
     <!-- File Upload Section -->
-    <div class="file-upload-container">
-      <!-- File Upload Input -->
+    <div class="file-upload-section">
+      <!-- File Upload Placeholder -->
       <div class="file-card upload-card" onclick="triggerFileUpload()">
-        <input type="file" id="file-input" multiple style="display: none;" accept=".csv, .xlsx">
-        <div class="upload-icon-container">
-          <p class="upload-text">+</p>
-          <p class="add-file">Add Files</p>
+        <input type="file" id="file-input" style="display: none;" accept=".csv, .xlsx">
+        <div class="file-icon">
+          <div class="file-plus">+</div>
         </div>
+        <p class="upload-text">Add New File</p>
       </div>
 
-      <!-- Placeholder for Uploaded Files -->
+      <!-- Uploaded Files List -->
       <div id="file-list" class="file-list">
-        <!-- Uploaded files will appear here -->
+        <!-- Files will be dynamically added here -->
       </div>
     </div>
   </div>
@@ -39,45 +39,33 @@
       fileInput.click();
     }
 
-    fileInput.addEventListener('change', (event) => {
+    {% comment %} fileInput.addEventListener('change', (event) => {
       const files = event.target.files;
 
       for (const file of files) {
         const fileCard = document.createElement('div');
-        fileCard.classList.add('file-card', 'uploaded-file');
+        fileCard.classList.add('file-card');
 
-        // Create a blurred preview section
-        const previewSection = document.createElement('div');
-        previewSection.classList.add('file-preview');
-        previewSection.textContent = "Preview Loading...";
+        // File Icon
+        const fileIcon = document.createElement('div');
+        fileIcon.classList.add('file-icon');
+        const fileType = document.createElement('p');
+        fileType.classList.add('file-type');
+        fileType.textContent = file.name.split('.').pop().toUpperCase();
+        fileIcon.appendChild(fileType);
 
-        // Display first few rows from CSV or Excel files
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const content = e.target.result.split('\n').slice(0, 5).join('\n');
-          previewSection.textContent = content;
-        };
-        reader.readAsText(file);
-
-        // Append the preview to the file card
-        fileCard.appendChild(previewSection);
-
-        // Append the file name input below the entire file card (outside the card)
+        // Editable File Name
         const fileNameInput = document.createElement('input');
-        fileNameInput.classList.add('file-name');
-        fileNameInput.value = file.name.split('.').slice(0, -1).join('.'); // Default value: file name without extension
-        fileNameInput.setAttribute('type', 'text');
-        
-        // Append file name input below the file card
-        const fileNameSection = document.createElement('div');
-        fileNameSection.classList.add('file-name-section');
-        fileNameSection.appendChild(fileNameInput);
-        fileCard.appendChild(fileNameSection);
+        fileNameInput.type = 'text';
+        fileNameInput.classList.add('file-name-input');
+        fileNameInput.value = file.name;
 
-        // Append the file card to the file list
+        // Append Elements
+        fileCard.appendChild(fileIcon);
+        fileCard.appendChild(fileNameInput);
         fileList.appendChild(fileCard);
-      }
-    });
+      } {% endcomment %}
+    {% comment %} }); {% endcomment %}
   </script>
 </body>
 </html>
