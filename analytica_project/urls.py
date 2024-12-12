@@ -21,4 +21,6 @@ from analytica_app.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPage, name='landing_page'),
+    path('analytic-page/', AnalyticPage, name='analytic_page'),
+    path('upload-file/', UploadFile, name='upload_file'),
 ]

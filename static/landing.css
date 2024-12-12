@@ -40,6 +40,45 @@ body {
   border-radius: 10px;
 }
 
+
+
+/* Container for centering */
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Button styling */
+.continue-button {
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #4e54c8, #8f94fb); /* Gradient for modern look */
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Hover effect */
+.continue-button:hover {
+  background: linear-gradient(135deg, #8f94fb, #4e54c8); /* Invert gradient */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow */
+  transform: translateY(-2px); /* Slight lift */
+}
+
+/* Focus state for accessibility */
+.continue-button:focus {
+  outline: 2px solid #8f94fb;
+  outline-offset: 2px;
+}
+
+
+
 .navbar-menu {
   list-style: none;
   display: flex;
