@@ -1,0 +1,76 @@
+/* Global Styles */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Header */
+header h1 {
+  font-size: 32px;
+  font-weight: bold;
+  color: #4e54c8;
+  margin-bottom: 10px;
+}
+
+header p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* Hierarchy Section */
+.hierarchy {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+
+/* Process Section */
+.process {
+  width: 100%;
+}
+
+.process h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Icons Container */
+.icons-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.icon {
+  width: 120px;
+  text-align: center;
+}
+
+.icon img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+  transition: transform 0.2s;
+}
+
+.icon img:hover {
+  transform: scale(1.1);
+}
+
+.icon p {
+  font-size: 14px;
+  color: #555;
+}
