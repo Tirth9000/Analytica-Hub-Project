@@ -17,10 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from analytica_app.views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPage, name='landing_page'),
     path('analytic-page/', AnalyticPage, name='analytic_page'),
     path('upload-file/', UploadFile, name='upload_file'),
-]
+
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
