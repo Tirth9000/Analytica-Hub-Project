@@ -15,6 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django_mongoengine import admin as mongo_admin
 from django.urls import path
 from analytica_app.views import *
 from django.conf import settings
@@ -22,6 +23,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('mongo_admin/', mongo_admin.site.urls),
     path('', LandingPage, name='landing_page'),
     path('analytic-page/', AnalyticPage, name='analytic_page'),
     path('upload-file/', UploadFile, name='upload_file'),
