@@ -39,8 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_mongoengine',
-    'django_mongoengine.admin',
     'analytica_app',
 ]
 
