@@ -8,12 +8,19 @@ def LandingPage(request):
     return render(request, 'landing.html')
 
 def AnalyticPage(request, id):
-    # dataFile = AnalysisFile.objects.get(file_id = id)
-    dataFile = 'hello'
-    datafile = pd.read_csv('shopping_trends.csv')
-    columns = datafile.columns.tolist()
-    rows = datafile.values.tolist()
-    return render(request, 'analytic.html', {"file": dataFile, "columns": columns, "rows": rows})
+    fileObj = AnalysisFile.objects.get(file_id = id)
+    df = pd.read_csv(fileObj.file)
+    print(df)
+    columns = df.columns.tolist()
+    rows = df.values.tolist()
+    return render(request, 'analytic.html', {"file": fileObj, "columns": columns, "rows": rows})
+
+def Details(request, id):
+    fileObj = AnalysisFile.objects.get(file_id = id)
+    df = pd.read_csv(fileObj.file)
+    details = df.describe()
+    print(details)
+    return render(request, 'details.html', {'details': details})
 
 def UploadFile(request):
     files = AnalysisFile.objects.all()

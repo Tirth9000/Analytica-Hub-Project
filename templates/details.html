@@ -1,0 +1,14 @@
+<div class="popup-overlay">
+    <div class="popup">
+      <button class="close-btn" onclick="closePopup()">×</button>
+      <h2>Details</h2>
+      <p>This is the content of the popup.</p>
+    </div>
+  </div>
+
+<script>
+    function closePopup() {
+        const popupOverlay = document.querySelector('.popup-overlay');
+        popupOverlay.style.display = 'none'; // Hides the popup overlay
+      }
+</script>

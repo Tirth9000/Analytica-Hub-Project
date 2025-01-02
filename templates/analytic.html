@@ -8,11 +8,10 @@
     <link rel="stylesheet" href="/static/analytic.css">
 </head>
 <body>
-    <!-- Header Section -->
     <div class="header">
       <div class="header-left">
             <img src="/static/images/Analytica_Hub.jpeg" class="header-logo">
-            <div class="file-name" data-tooltip="Rename" contenteditable="true">Untitled Document</div>
+            <div class="file-name" data-tooltip="Rename" contenteditable="true">{{file.file_name}}</div>
         </div>
         <div class="header-right">
             <button class="file-btn">
@@ -26,7 +25,7 @@
             </button>
         </div>
     </div>
-
+    <div class="container"></div>
     <div class="csv-table-container">
         <div class="table-wrapper">
             <table class="csv-table">
@@ -38,7 +37,7 @@
                             <div class="dropdown-container">
                                 <button class="dropdown-btn">▼</button>
                                 <div class="dropdown-menu">
-                                    <button hx-get="">details</button>
+                                    <button hx-get="{% url 'details' id=file.file_id %}" hx-target=".container" hx-swap="innerHTML">details</button>
                                     <button>Sort Z-A</button>
                                     <div class="dropdown-submenu">
                                         <button>Advanced Options ▸</button>
