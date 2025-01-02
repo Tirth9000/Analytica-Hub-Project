@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Docs Styled Page with Advanced Dropdowns</title>
+    <script src="https://unpkg.com/htmx.org"></script>
     <link rel="stylesheet" href="/static/analytic.css">
 </head>
 <body>
@@ -31,12 +32,13 @@
             <table class="csv-table">
                 <thead>
                     <tr>
+                        {% for col in columns %}
                         <th>
-                            Name
+                            {{col|upper}}
                             <div class="dropdown-container">
                                 <button class="dropdown-btn">▼</button>
                                 <div class="dropdown-menu">
-                                    <button>details</button>
+                                    <button hx-get="">details</button>
                                     <button>Sort Z-A</button>
                                     <div class="dropdown-submenu">
                                         <button>Advanced Options ▸</button>
@@ -48,46 +50,17 @@
                                 </div>
                             </div>
                         </th>
-                        <th>
-                            Age
-                            <div class="dropdown-container">
-                                <button class="dropdown-btn">▼</button>
-                                <div class="dropdown-menu">
-                                    <button>Sort Ascending</button>
-                                    <button>Sort Descending</button>
-                                    <button>Filter</button>
-                                </div>
-                            </div>
-                        </th>
-                        <th>
-                            Location
-                            <div class="dropdown-container">
-                                <button class="dropdown-btn">▼</button>
-                                <div class="dropdown-menu">
-                                    <button>Sort A-Z</button>
-                                    <button>Sort Z-A</button>
-                                    <button>Filter</button>
-                                </div>
-                            </div>
-                        </th>
+                        {% endfor %}
                     </tr>
                 </thead>
                 <tbody>
+                    {% for row in rows %}
                     <tr>
-                        <td>tirth</td></td>
-                        <td>28</td>
-                        <td>New York</td>
+                        {% for value in row %}
+                        <td>{{value}}</td></td>
+                        {% endfor %}
                     </tr>
-                    <tr>
-                        <td>Jane Smith</td>
-                        <td>34</td>
-                        <td>Los Angeles</td>
-                    </tr>
-                    <tr>
-                        <td>Sam Wilson</td>
-                        <td>23</td>
-                        <td>Chicago</td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
