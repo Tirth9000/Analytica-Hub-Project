@@ -218,3 +218,60 @@ body {
 .dropdown-container:hover > .dropdown-menu {
   display: block;
 }
+
+
+
+/* Details.html */
+
+/* Blurred Background */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  backdrop-filter: blur(10px); /* Apply blur effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top of other elements */
+}
+
+/* Popup Box */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: #ff4d4d; /* Changes color to red when hovered */
+}
+
+/* Popup (add relative position for close button positioning) */
+.popup {
+  position: relative; /* Makes the popup a containing block for the close button */
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 10px;
+  width: 300px;
+  max-width: 90%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* Popup Heading */
+.popup h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 15px;
+}
