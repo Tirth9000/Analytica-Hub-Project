@@ -1,8 +1,8 @@
 django
-python-decouple
 cryptography
+python-decouple
 django-celery-results
 pymysql
 celery
 redis
-django-celery-results
+pandas
