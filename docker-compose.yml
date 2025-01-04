@@ -5,10 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: >
-      sh -c "dockerize -wait tcp://mysql:3306 -timeout 60s &&
-      python manage.py migrate &&
-      python manage.py runserver 0.0.0.0:8000"
     env_file:
       - .env  
     container_name: analytica_django
