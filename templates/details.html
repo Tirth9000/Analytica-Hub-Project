@@ -2,7 +2,105 @@
     <div class="popup">
       <button class="close-btn" onclick="closePopup()">×</button>
       <h2>Details</h2>
-      <p>This is the content of the popup.</p>
+      <table>
+        <thead>
+          <tr>
+            <td>#</td>
+            {% for column in columns %}
+              <td>{{column}}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <td>count</td>
+            {% for key, value in details.items %}
+              <td>{{value.count}}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <td>mean</td>
+            {% for key, value in details.items %}
+              <td>{{value.mean}}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <td>std</td>
+            {% for key, value in details.items %}
+              <td>{{value.std}}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <td>min</td>
+            {% for key, value in details.items %}
+              <td>{{value.min}}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <td>25%</td>
+            {% for key, value in details.items %}
+              <td>{{value.25}}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <td>50%</td>
+            {% for key, value in details.items %}
+              <td>{{value.50}}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <td>75%</td>
+            {% for key, value in details.items %}
+              <td>{{value.75}}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <td>max</td>
+            {% for key, value in details.items %}
+              <td>{{value.max}}</td>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+      <!--div class="table-container">
+        <h2 class="table-title">Library Books</h2>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Book Name</th>
+              <th>Author Name</th>
+              <th>Year Published</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>The Great Gatsby</td>
+              <td>F. Scott Fitzgerald</td>
+              <td>1925</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>To Kill a Mockingbird</td>
+              <td>Harper Lee</td>
+              <td>1960</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>1984</td>
+              <td>George Orwell</td>
+              <td>1949</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>The Catcher in the Rye</td>
+              <td>J.D. Salinger</td>
+              <td>1951</td>
+            </tr>
+          </tbody>
+        </table>
+      </div-->
     </div>
   </div>
 

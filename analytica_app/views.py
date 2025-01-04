@@ -18,9 +18,9 @@ def AnalyticPage(request, id):
 def Details(request, id):
     fileObj = AnalysisFile.objects.get(file_id = id)
     df = pd.read_csv(fileObj.file)
-    details = df.describe()
-    print(details)
-    return render(request, 'details.html', {'details': details})
+    columns = list(df.describe())
+    details = df.describe().to_dict()
+    return render(request, 'details.html', {'details': details, 'columns': columns})
 
 def UploadFile(request):
     files = AnalysisFile.objects.all()
