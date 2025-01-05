@@ -1,112 +1,76 @@
+{% load custom_filters %}
 <div class="popup-overlay">
     <div class="popup">
       <button class="close-btn" onclick="closePopup()">×</button>
       <h2>Details</h2>
-      <table>
-        <thead>
-          <tr>
-            <td>#</td>
-            {% for column in columns %}
-              <td>{{column}}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td>count</td>
-            {% for key, value in details.items %}
-              <td>{{value.count}}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td>mean</td>
-            {% for key, value in details.items %}
-              <td>{{value.mean}}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td>std</td>
-            {% for key, value in details.items %}
-              <td>{{value.std}}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td>min</td>
-            {% for key, value in details.items %}
-              <td>{{value.min}}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td>25%</td>
-            {% for key, value in details.items %}
-              <td>{{value.25}}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td>50%</td>
-            {% for key, value in details.items %}
-              <td>{{value.50}}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td>75%</td>
-            {% for key, value in details.items %}
-              <td>{{value.75}}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td>max</td>
-            {% for key, value in details.items %}
-              <td>{{value.max}}</td>
-            {% endfor %}
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
-      <!--div class="table-container">
-        <h2 class="table-title">Library Books</h2>
-        <table>
+      <div class="table-container">
+        <table class="modern-table">
           <thead>
             <tr>
-              <th></th>
-              <th>Book Name</th>
-              <th>Author Name</th>
-              <th>Year Published</th>
+              <th class="fixed-column"></th> <!-- Empty cell for the fixed column header -->
+              {% for column in columns %}
+                <th>{{ column|upper }}</th>
+              {% endfor %}
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>1</td>
-              <td>The Great Gatsby</td>
-              <td>F. Scott Fitzgerald</td>
-              <td>1925</td>
+              <td class="fixed-column"><b>COUNT</b></td>
+              {% for key, value in details.items %}
+                <td>{{ value.count }}</td>
+              {% endfor %}
             </tr>
             <tr>
-              <td>2</td>
-              <td>To Kill a Mockingbird</td>
-              <td>Harper Lee</td>
-              <td>1960</td>
+              <td class="fixed-column"><b>MEAN</b></td>
+              {% for key, value in details.items %}
+                <td>{{ value.mean }}</td>
+              {% endfor %}
             </tr>
             <tr>
-              <td>3</td>
-              <td>1984</td>
-              <td>George Orwell</td>
-              <td>1949</td>
+              <td class="fixed-column"><b>STD</b></td>
+              {% for key, value in details.items %}
+                <td>{{ value.std }}</td>
+              {% endfor %}
             </tr>
             <tr>
-              <td>4</td>
-              <td>The Catcher in the Rye</td>
-              <td>J.D. Salinger</td>
-              <td>1951</td>
+              <td class="fixed-column"><b>MIN</b></td>
+              {% for key, value in details.items %}
+                <td>{{ value.min }}</td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <td class="fixed-column"><b>25%</b></td>
+              {% for key, value in details.items %}
+                <td>{{ value|key:'25%' }}</td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <td class="fixed-column"><b>50%</b></td>
+              {% for key, value in details.items %}
+                <td>{{ value|key:'50%' }}</td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <td class="fixed-column"><b>75%</b></td>
+              {% for key, value in details.items %}
+                <td>{{ value|key:'75%' }}</td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <td class="fixed-column"><b>MAX</b></td>
+              {% for key, value in details.items %}
+                <td>{{ value.max }}</td>
+              {% endfor %}
             </tr>
           </tbody>
         </table>
-      </div-->
+      </div>
     </div>
   </div>
 
 <script>
     function closePopup() {
         const popupOverlay = document.querySelector('.popup-overlay');
-        popupOverlay.style.display = 'none'; // Hides the popup overlay
+        popupOverlay.style.display = 'none';
       }
 </script>

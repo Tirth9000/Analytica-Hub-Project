@@ -10,7 +10,6 @@ def LandingPage(request):
 def AnalyticPage(request, id):
     fileObj = AnalysisFile.objects.get(file_id = id)
     df = pd.read_csv(fileObj.file)
-    print(df)
     columns = df.columns.tolist()
     rows = df.values.tolist()
     return render(request, 'analytic.html', {"file": fileObj, "columns": columns, "rows": rows})

@@ -276,3 +276,72 @@ body {
   color: #333;
   margin-bottom: 15px;
 }
+
+
+
+/* Container to enable horizontal scrolling */
+.table-container {
+  overflow-x: auto; /* Enable horizontal scrolling */
+  max-width: 100%; /* Responsive container */
+  margin: 20px auto; /* Center the container */
+  border: 1px solid #ddd; /* Subtle border */
+  border-radius: 10px; /* Rounded corners */
+  background-color: #f9f9f9; /* Light background */
+  padding: 10px;
+}
+
+/* Table styling */
+.modern-table {
+  width: 100%; /* Full-width table */
+  border-collapse: collapse; /* Collapse borders */
+  font-family: 'Arial', sans-serif;
+  text-align: left;
+}
+
+/* Header styling */
+.modern-table thead tr th {
+  position: sticky; /* Fix header row */
+  top: 0;
+  z-index: 2; /* Ensure header is above other elements */
+  background-color: #4caf50; /* Green background for header */
+  color: white; /* White text */
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  white-space: nowrap; /* Prevent wrapping */
+}
+
+/* First column static styling */
+.fixed-column {
+  position: sticky; /* Fix the first column */
+  left: 0;
+  z-index: 1; /* Ensure first column is below the header */
+  background-color: #f4f4f4; /* Light gray background for clarity */
+  font-weight: bold;
+  padding: 10px;
+  border-right: 1px solid #ddd; /* Add a dividing border */
+  white-space: nowrap; /* Prevent wrapping */
+}
+
+/* Prevent empty header cell from scrolling */
+thead .fixed-column {
+  z-index: 3; /* Ensure it stays above the body rows */
+  background-color: #4caf50; /* Match the header color */
+  color: white; /* White text for consistency */
+}
+
+/* Cell styling */
+.modern-table td, .modern-table th {
+  padding: 10px;
+  border: 1px solid #ddd;
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+/* Table body row styling */
+.modern-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2; /* Alternating row colors */
+}
+
+.modern-table tbody tr:hover {
+  background-color: #ddd; /* Highlight row on hover */
+}
