@@ -3,6 +3,7 @@ cryptography
 python-decouple
 django-celery-results
 pymysql
+mysqlclient
 celery
 redis
 pandas

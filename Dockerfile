@@ -14,9 +14,6 @@ COPY . .
 
 EXPOSE 8000
 
-ENTRYPOINT ["sh", "-c", " \
-    # dockerize -wait tcp://redis:6379 -timeout 60s && \
-    dockerize -wait tcp://mysql:3306 -timeout 60s && \
-    # celery -A annotary_project worker --loglevel=info & \
-    python manage.py migrate && \
-    python manage.py runserver 0.0.0.0:8000"]
+ENTRYPOINT ["dockerize", "-wait", "tcp://mysql:3306", "-wait", "tcp://redis:6379", "-timeout", "60s"]
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
