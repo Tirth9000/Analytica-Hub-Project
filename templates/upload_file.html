@@ -8,14 +8,11 @@
 </head>
 <body>
   <div class="container">
-    <!-- Page Header -->
     <div class="header">
       <h1>Upload Your Files</h1>
     </div>
 
-    <!-- File Upload Section -->
     <div class="file-upload-section">
-      <!-- File Upload Placeholder -->
       <div class="file-card upload-card" onclick="triggerFileUpload()">
         <input name="dataFile" type="file" id="file-input" style="display: none;" accept=".csv, .xlsx">
         <div class="file-icon">
@@ -24,13 +21,12 @@
         <p class="upload-text">Add New File</p>
       </div>
 
-      <!-- Uploaded Files List -->
       {% for file in files %}
       <div class="file-container">
         <a href="{% url 'analytic_page' file.file_id%}">
           <div class="file-item">
             <div class="file-icon">📄</div>
-            <div class="file-name">{{file.file}}</div>
+            <div class="file-name">{{file.file_name}}</div>
           </div>
         </a>
       </div>

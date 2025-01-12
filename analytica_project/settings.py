@@ -147,5 +147,5 @@ EMAIL_USE_TLS = config('EMAIL_TLS')
 # CELERY_BROKER_URL = 'redis://localhost:6379/0'          # to run celery locally 
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/1'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
