@@ -1,4 +1,3 @@
-/* General Reset */
 * {
   margin: 0;
   padding: 0;
@@ -91,7 +90,6 @@ body {
   color: #202124;
 }
 
-/* CSV Table Container */
 .csv-table-container {
   margin: 20px auto;
   padding: 10px;
@@ -102,13 +100,11 @@ body {
   width: 95%;
 }
 
-/* Table Wrapper */
 .table-wrapper {
   max-height: 650px; /* Adjust as necessary */
   overflow: auto;
 }
 
-/* Table Styling */
 .csv-table {
   width: 100%;
   border-collapse: collapse;
@@ -143,7 +139,6 @@ body {
   background-color: #e8eaed;
 }
 
-/* Dropdown Button */
 .dropdown-btn {
   display: inline;
   background: none;
@@ -153,7 +148,6 @@ body {
   cursor: pointer;
 }
 
-/* Dropdown Menu */
 .dropdown-container {
   position: relative;
   display: inline;
@@ -188,7 +182,6 @@ body {
   background-color: #f1f3f4;
 }
 
-/* Submenu Styling */
 .dropdown-submenu {
   position: relative;
 }
@@ -214,7 +207,6 @@ body {
   display: block;
 }
 
-/* Show Dropdown Menu on Click */
 .dropdown-container:hover > .dropdown-menu {
   display: block;
 }
@@ -223,7 +215,6 @@ body {
 
 /* Details.html */
 
-/* Blurred Background */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -238,7 +229,6 @@ body {
   z-index: 1000; /* Ensure it's on top of other elements */
 }
 
-/* Popup Box */
 .close-btn {
   position: absolute;
   top: 10px;
@@ -256,7 +246,6 @@ body {
   color: #ff4d4d; /* Changes color to red when hovered */
 }
 
-/* Popup (add relative position for close button positioning) */
 .popup {
   position: relative; /* Makes the popup a containing block for the close button */
   background: #fff;
@@ -269,7 +258,6 @@ body {
   text-align: center;
 }
 
-/* Popup Heading */
 .popup h2 {
   margin: 0;
   font-size: 24px;
@@ -279,69 +267,69 @@ body {
 
 
 
-/* Container to enable horizontal scrolling */
+
+
 .table-container {
-  overflow-x: auto; /* Enable horizontal scrolling */
-  max-width: 100%; /* Responsive container */
-  margin: 20px auto; /* Center the container */
-  border: 1px solid #ddd; /* Subtle border */
-  border-radius: 10px; /* Rounded corners */
-  background-color: #f9f9f9; /* Light background */
-  padding: 10px;
+overflow-x: auto; 
+max-width: 100%; 
+margin: 20px; 
+border: 1px solid #ddd; 
+border-radius: 20px; 
+background-color: #f9f9f9;
+padding-top: 10px;
+padding-bottom: 10px;
 }
 
-/* Table styling */
+.desc-container {
+  width: 50%;
+}
+
 .modern-table {
-  width: 100%; /* Full-width table */
-  border-collapse: collapse; /* Collapse borders */
-  font-family: 'Arial', sans-serif;
-  text-align: left;
+/* width: 100%;  */
+border-collapse: collapse;
+font-family: 'Arial', sans-serif;
+text-align: left;
 }
 
-/* Header styling */
 .modern-table thead tr th {
-  position: sticky; /* Fix header row */
-  top: 0;
-  z-index: 2; /* Ensure header is above other elements */
-  background-color: #4caf50; /* Green background for header */
-  color: white; /* White text */
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  white-space: nowrap; /* Prevent wrapping */
+position: sticky; 
+top: 0;
+z-index: 2;
+background-color: #383838; 
+color: white; 
+padding: 3px;
+font-size: 14px;
+border: 1px solid #ddd;
+white-space: nowrap; 
 }
 
-/* First column static styling */
 .fixed-column {
-  position: sticky; /* Fix the first column */
-  left: 0;
-  z-index: 1; /* Ensure first column is below the header */
-  background-color: #f4f4f4; /* Light gray background for clarity */
-  font-weight: bold;
-  padding: 10px;
-  border-right: 1px solid #ddd; /* Add a dividing border */
-  white-space: nowrap; /* Prevent wrapping */
+position: sticky; 
+left: 0;
+z-index: 1; 
+background-color: #f4f4f4;
+font-weight: bold;
+padding: 3px;
+border: px solid #565656; 
+white-space: nowrap; 
 }
-
-/* Prevent empty header cell from scrolling */
+        
 thead .fixed-column {
-  z-index: 3; /* Ensure it stays above the body rows */
-  background-color: #4caf50; /* Match the header color */
-  color: white; /* White text for consistency */
+z-index: 3; 
+background-color: #383838; 
+color: white; 
 }
 
-/* Cell styling */
 .modern-table td, .modern-table th {
-  padding: 10px;
-  border: 1px solid #ddd;
-  white-space: nowrap; /* Prevent text from wrapping */
+padding: 3px 5px;
+border: 1px solid #565656;
+white-space: nowrap; 
 }
 
-/* Table body row styling */
 .modern-table tbody tr:nth-child(even) {
-  background-color: #f2f2f2; /* Alternating row colors */
+background-color: #f2f2f2; 
 }
 
 .modern-table tbody tr:hover {
-  background-color: #ddd; /* Highlight row on hover */
-}
+background-color: #ddd; 
+} 

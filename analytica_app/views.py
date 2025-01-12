@@ -14,7 +14,11 @@ def AnalyticPage(request, id):
     store_dataframe_in_redis(df, 'redis_df')
     columns = df.columns.tolist()
     rows = df.values.tolist()
-    return render(request, 'analytic.html', {"file": fileObj, "columns": columns, "rows": rows})
+
+    desc_columns = list(df.describe())
+    details = df.describe().to_dict()
+    
+    return render(request, 'analytic.html', {"file": fileObj, "columns": columns, "rows": rows,  'details': details, 'desc_columns': desc_columns})
 
 def Details(request, id):
     df = get_dataframe_from_redis_pickle('redis_df')
