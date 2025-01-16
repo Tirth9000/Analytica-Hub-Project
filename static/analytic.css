@@ -280,12 +280,17 @@ padding-top: 10px;
 padding-bottom: 10px;
 }
 
-.desc-container {
-  width: 50%;
+.inner-container {
+  overflow-x: auto; 
+  max-width: 50%; 
+  margin: 10px; 
+  border: 2px solid #ddd; 
+  border-radius: 20px; 
+  background-color: #f9f9f9;
 }
 
 .modern-table {
-/* width: 100%;  */
+width: 100%; 
 border-collapse: collapse;
 font-family: 'Arial', sans-serif;
 text-align: left;

@@ -68,12 +68,13 @@
 
 
     <div class="table-container">
-        <table class="desc-container modern-table">
+      <div class="inner-container">
+        <table class="modern-table">
           <thead>
             <tr>
-              <th class="fixed-column"></th> <!-- Empty cell for the fixed column header -->
+              <th class="fixed-column"></th> 
               {% for column in desc_columns %}
-                <th class="fixed-column">{{ column|upper }}</th>
+              <th class="fixed-column">{{ column|upper }}</th>
               {% endfor %}
             </tr>
           </thead>
@@ -81,54 +82,55 @@
             <tr>
               <td class="fixed-column"><b>COUNT</b></td>
               {% for key, value in details.items %}
-                <td>{{ value.count|floatformat:0 }}</td>
+              <td>{{ value.count|floatformat:0 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>MEAN</b></td>
               {% for key, value in details.items %}
-                <td>{{ value.mean|floatformat:3 }}</td>
+              <td>{{ value.mean|floatformat:3 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>STD</b></td>
               {% for key, value in details.items %}
-                <td>{{ value.std|floatformat:3 }}</td>
+              <td>{{ value.std|floatformat:3 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>MIN</b></td>
               {% for key, value in details.items %}
-                <td>{{ value.min|floatformat:3 }}</td>
+              <td>{{ value.min|floatformat:3 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>25%</b></td>
               {% for key, value in details.items %}
-                <td>{{ value|key:'25%'|floatformat:3 }}</td>
+              <td>{{ value|key:'25%'|floatformat:3 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>50%</b></td>
               {% for key, value in details.items %}
-                <td>{{ value|key:'50%'|floatformat:3 }}</td>
+              <td>{{ value|key:'50%'|floatformat:3 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>75%</b></td>
               {% for key, value in details.items %}
-                <td>{{ value|key:'75%'|floatformat:3 }}</td>
+              <td>{{ value|key:'75%'|floatformat:3 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>MAX</b></td>
               {% for key, value in details.items %}
-                <td>{{ value.max|floatformat:3 }}</td>
+              <td>{{ value.max|floatformat:3 }}</td>
               {% endfor %}
             </tr>
           </tbody>
         </table>
       </div>
-
-</body>
-</html>
+    </div>
+      
+    </body>
+    </html>
