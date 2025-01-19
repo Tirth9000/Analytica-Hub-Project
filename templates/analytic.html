@@ -38,14 +38,24 @@
                             <div class="dropdown-container">
                                 <button class="dropdown-btn">▼</button>
                                 <div class="dropdown-menu">
-                                    <button hx-get="{% url 'details' id=file.file_id %}" hx-target=".container" hx-swap="innerHTML">details</button>
-                                    <button>Sort Z-A</button>
+                                    <button hx-get="{% url 'details' id=file.file_id colName=col %}" hx-target=".container" hx-swap="innerHTML">details</button>
                                     <div class="dropdown-submenu">
-                                        <button>Advanced Options ▸</button>
-                                        <div class="dropdown-submenu-menu">
-                                            <button>Filter by Length</button>
-                                            <button>Custom Sort</button>
-                                        </div>
+                                          <button>Drop NaN</button>
+                                          <div class="dropdown-submenu">
+                                            <button>Fill NaN ▸</button>
+                                            <div class="dropdown-submenu-menu">
+                                              <button>Using F-fill()</button>
+                                              <button>Using B-fill()</button>
+                                              <div class="dropdown-submenu">
+                                                <button>Descriptive Statistics ▸</button>
+                                                <div class="dropdown-submenu-menu">
+                                                  <button>Mean</button>
+                                                  <button>Median</button>
+                                                  <button>Mode</button>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
                                     </div>
                                 </div>
                             </div>
@@ -132,5 +142,5 @@
       </div>
     </div>
       
-    </body>
-    </html>
+  </body>
+</html>

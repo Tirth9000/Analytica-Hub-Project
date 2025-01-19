@@ -25,7 +25,7 @@ urlpatterns = [
     path('', LandingPage, name='landing_page'),
     path('upload-file/', UploadFile, name='upload_file'),
     path('analytic-page/<str:id>/', AnalyticPage, name='analytic_page'),
-    path('analytic-page/<str:id>/details/', Details, name='details'),
+    path('analytic-page/<str:id>/details/<str:colName>', Details, name='details'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

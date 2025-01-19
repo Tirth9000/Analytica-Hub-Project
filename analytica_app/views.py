@@ -20,11 +20,12 @@ def AnalyticPage(request, id):
     
     return render(request, 'analytic.html', {"file": fileObj, "columns": columns, "rows": rows,  'details': details, 'desc_columns': desc_columns})
 
-def Details(request, id):
+def Details(request, id, colName):
     df = get_dataframe_from_redis_pickle('redis_df')
     columns = list(df.describe())
     details = df.describe().to_dict()
-    return render(request, 'details.html', {'details': details, 'columns': columns})
+    nullcount = df[colName].isnull().sum()
+    return render(request, 'details.html', {'details': details, 'columns': columns, 'nullCount': nullcount})
 
 def UploadFile(request):
     files = AnalysisFile.objects.all()
