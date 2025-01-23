@@ -26,6 +26,7 @@ urlpatterns = [
     path('upload-file/', UploadFile, name='upload_file'),
     path('analytic-page/<str:id>/', AnalyticPage, name='analytic_page'),
     path('analytic-page/<str:id>/details/<str:colName>', Details, name='details'),
-
+    path('analytic-page/<str:id>/detials/<str:colName>/drop-nan', DropNaN, name='dropna'),
+    path('analytic-page/<str:id>/detials/<str:colName>/fill-nan/<str:type>', FillNaN, name='fillna'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

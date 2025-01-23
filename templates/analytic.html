@@ -27,54 +27,55 @@
         </div>
     </div>
     <div class="container"></div>
+    {{hello}}
     <div class="csv-table-container">
-        <div class="table-wrapper">
-            <table class="csv-table">
-                <thead>
-                    <tr>
-                        {% for col in columns %}
-                        <th>
-                            {{col|upper}}
-                            <div class="dropdown-container">
-                                <button class="dropdown-btn">▼</button>
-                                <div class="dropdown-menu">
-                                    <button hx-get="{% url 'details' id=file.file_id colName=col %}" hx-target=".container" hx-swap="innerHTML">details</button>
-                                    <div class="dropdown-submenu">
-                                          <button>Drop NaN</button>
-                                          <div class="dropdown-submenu">
-                                            <button>Fill NaN ▸</button>
-                                            <div class="dropdown-submenu-menu">
-                                              <button>Using F-fill()</button>
-                                              <button>Using B-fill()</button>
-                                              <div class="dropdown-submenu">
-                                                <button>Descriptive Statistics ▸</button>
-                                                <div class="dropdown-submenu-menu">
-                                                  <button>Mean</button>
-                                                  <button>Median</button>
-                                                  <button>Mode</button>
-                                                </div>
+      <div class="table-wrapper">
+          <table class="csv-table">
+              <thead>
+                  <tr>
+                      {% for col in columns %}
+                      <th>
+                          {{col|upper}}
+                          <div class="dropdown-container">
+                              <button class="dropdown-btn">▼</button>
+                              <div class="dropdown-menu">
+                                  <button hx-get="{% url 'details' id=file.file_id colName=col %}" hx-target=".container" hx-swap="innerHTML">details</button>
+                                  <div class="dropdown-submenu">
+                                        <button hx-get="{% url 'dropna' id=file.file_id colName=col %}" hx-target="body" >Drop NaN</button>
+                                        <div class="dropdown-submenu">
+                                          <button>Fill NaN ▸</button>
+                                          <div class="dropdown-submenu-menu">
+                                            <button hx-get="{% url 'fillna' id=file.file_id colName=col type='ffill' %}" hx-target="body">Using F-fill()</button>
+                                            <button hx-get="{% url 'fillna' id=file.file_id colName=col type='bfill' %}" hx-target="body">Using B-fill()</button>
+                                            <div class="dropdown-submenu">
+                                              <button>Descriptive Statistics ▸</button>
+                                              <div class="dropdown-submenu-menu">
+                                                <button hx-get="{% url 'fillna' id=file.file_id colName=col type='mean' %}" hx-target="body">Mean</button>
+                                                <button hx-get="{% url 'fillna' id=file.file_id colName=col type='median' %}" hx-target="body">Median</button>
+                                                <button hx-get="{% url 'fillna' id=file.file_id colName=col type='mode' %}" hx-target="body">Mode</button>
                                               </div>
                                             </div>
                                           </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in rows %}
-                    <tr>
-                        {% for value in row %}
-                        <td>{{value}}</td>
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+                                        </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </th>
+                      {% endfor %}
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for row in rows %}
+                  <tr>
+                      {% for value in row %}
+                      <td>{{value}}</td>
+                      {% endfor %}
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+  </div>
 
 
     <div class="table-container">
