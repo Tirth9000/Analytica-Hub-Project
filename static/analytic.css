@@ -44,6 +44,7 @@ body {
   background-color: #f4f3f3;
   cursor: text;
   outline: none;
+  border: 1px;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
@@ -59,7 +60,7 @@ body {
   font-size: 12px;
   visibility: hidden; 
   opacity: 0; 
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 5s in-out;
 }
 
 .file-name:hover::after {
@@ -69,7 +70,7 @@ body {
 
 .file-name:hover,
 .file-name:focus {
-  padding: 4px 9px;
+  padding: 3px 9px;
   background-color: #fff;
   border: 1px solid #4285f4;
 }
@@ -263,73 +264,94 @@ body {
 
 
 
-
-.table-container {
-overflow-x: auto; 
-max-width: 100%; 
-margin: 20px; 
-border: 1px solid #ddd; 
-border-radius: 20px; 
-background-color: #f9f9f9;
-padding-top: 10px;
-padding-bottom: 10px;
+/* Terminal Panel */
+.terminal {
+  overflow: auto;
+  height: 200px; 
+  transition: height 0.0s ease-in-out; 
+  min-height: 50px; 
+  max-height: 700px;
 }
 
-.inner-container {
-  overflow-x: auto; 
-  max-width: 50%; 
-  margin: 10px; 
-  border: 2px solid #ddd; 
-  border-radius: 20px; 
-  background-color: #f9f9f9;
+#drag-handle {
+  cursor: ns-resize;
+  height: 5px;
+  background: #444;
+  transition: background 0.5s;
 }
 
-.modern-table {
-width: 100%; 
-border-collapse: collapse;
-font-family: 'Arial', sans-serif;
-text-align: left;
+#drag-handle:hover {
+  background: #666;
 }
 
-.modern-table thead tr th {
-position: sticky; 
-top: 0;
-z-index: 2;
-background-color: #383838; 
-color: white; 
-padding: 3px;
-font-size: 14px;
-border: 1px solid #ddd;
-white-space: nowrap; 
+.code-container {
+  width: 90%;
+  margin: auto;
 }
 
-.fixed-column {
-position: sticky; 
-left: 0;
-z-index: 1; 
-background-color: #f4f4f4;
-font-weight: bold;
-padding: 3px;
-border: px solid #565656; 
-white-space: nowrap; 
-}
-        
-thead .fixed-column {
-z-index: 3; 
-background-color: #383838; 
-color: white; 
+.code-node {
+  overflow: auto;
+  width: 100%;
+  background: #1e1e1e;
+  color: white;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 10px 0;
+  font-family: monospace;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-.modern-table td, .modern-table th {
-padding: 3px 5px;
-border: 1px solid #565656;
-white-space: nowrap; 
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
 }
 
-.modern-table tbody tr:nth-child(even) {
-background-color: #f2f2f2; 
+.run-btn, .add-node-btn {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
 }
 
-.modern-table tbody tr:hover {
-background-color: #ddd; 
-} 
+.run-btn:hover, .add-node-btn:hover {
+  background: #444;
+}
+
+.code-input {
+  width: 100%;
+  min-height: 40px;
+  background: #252526;
+  color: white;
+  border: none;
+  padding: 5px;
+  resize: none;
+  outline: none;
+  overflow: auto;
+  font-size: 14px;
+  overflow-y: hidden;
+}
+
+.code-output {
+  background: #151515;
+  color: #bbb;
+  padding: 5px;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.terminal-container {
+  width: 100%;
+  position: relative;
+}
+
+.terminal-icon{
+  width: 30px;
+  height: 30px;
+  margin-left: 8px;
+  display: flex;
+}
+

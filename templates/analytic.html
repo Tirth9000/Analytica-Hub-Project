@@ -1,84 +1,123 @@
 {% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Google Docs Styled Page with Advanced Dropdowns</title>
     <script src="https://unpkg.com/htmx.org"></script>
-    <link rel="stylesheet" href="/static/analytic.css">
-</head>
-<body>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/analytic.css" />
+  </head>
+  <body>
     <div class="header">
       <div class="header-left">
-            <img src="/static/images/Analytica_Hub.jpeg" class="header-logo">
-            <div class="file-name" data-tooltip="Rename" contenteditable="true">{{file.file_name|upper}}</div>
+        <img src="/static/images/Analytica_Hub.jpeg" class="header-logo" />
+        <div
+          name="fileName"
+          class="file-name"
+          contenteditable="true"
+          hx-get="{% url 'rename_file' id=file.file_id %}"
+          hx-trigger="blur delay:500ms"
+          onblur="this.setAttribute('hx-vals', JSON.stringify({new_name: this.innerText}))"
+          hx-swap=none
+        >
+          {{file.file_name|upper}}
         </div>
-        <div class="header-right">
-            <button class="file-btn">
-                <span class="icon">💾</span> Save
-            </button>
-            <button class="file-btn">
-                <span class="icon">🖨️</span> Print
-            </button>
-            <button class="file-btn">
-                <span class="icon">🔗</span> Share
-            </button>
-        </div>
+      </div>
+      <div class="header-right">
+        <button class="file-btn"><span class="icon">💾</span> Save</button>
+        <button class="file-btn"><span class="icon">🖨️</span> Print</button>
+        <button class="file-btn"><span class="icon">🔗</span> Share</button>
+      </div>
     </div>
     <div class="container"></div>
-    {{hello}}
     <div class="csv-table-container">
       <div class="table-wrapper">
-          <table class="csv-table">
-              <thead>
-                  <tr>
-                      {% for col in columns %}
-                      <th>
-                          {{col|upper}}
-                          <div class="dropdown-container">
-                              <button class="dropdown-btn">▼</button>
-                              <div class="dropdown-menu">
-                                  <button hx-get="{% url 'details' id=file.file_id colName=col %}" hx-target=".container" hx-swap="innerHTML">details</button>
-                                  <div class="dropdown-submenu">
-                                        <button hx-get="{% url 'dropna' id=file.file_id colName=col %}" hx-target="body" >Drop NaN</button>
-                                        <div class="dropdown-submenu">
-                                          <button>Fill NaN ▸</button>
-                                          <div class="dropdown-submenu-menu">
-                                            <button hx-get="{% url 'fillna' id=file.file_id colName=col type='ffill' %}" hx-target="body">Using F-fill()</button>
-                                            <button hx-get="{% url 'fillna' id=file.file_id colName=col type='bfill' %}" hx-target="body">Using B-fill()</button>
-                                            <div class="dropdown-submenu">
-                                              <button>Descriptive Statistics ▸</button>
-                                              <div class="dropdown-submenu-menu">
-                                                <button hx-get="{% url 'fillna' id=file.file_id colName=col type='mean' %}" hx-target="body">Mean</button>
-                                                <button hx-get="{% url 'fillna' id=file.file_id colName=col type='median' %}" hx-target="body">Median</button>
-                                                <button hx-get="{% url 'fillna' id=file.file_id colName=col type='mode' %}" hx-target="body">Mode</button>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                  </div>
-                              </div>
+        <table class="csv-table">
+          <thead>
+            <tr>
+              {% for col in columns %}
+              <th>
+                {{col|upper}}
+                <div class="dropdown-container">
+                  <button class="dropdown-btn">▼</button>
+                  <div class="dropdown-menu">
+                    <button
+                      hx-get="{% url 'details' id=file.file_id colName=col %}"
+                      hx-target=".container"
+                      hx-swap="innerHTML"
+                    >
+                      details
+                    </button>
+                    <div class="dropdown-submenu">
+                      <button
+                        hx-get="{% url 'dropna' id=file.file_id colName=col %}"
+                        hx-target="body"
+                      >
+                        Drop NaN
+                      </button>
+                      <div class="dropdown-submenu">
+                        <button>Fill NaN ▸</button>
+                        <div class="dropdown-submenu-menu">
+                          <button
+                            hx-get="{% url 'fillna' id=file.file_id colName=col method='ffill' %}"
+                            hx-target="body"
+                          >
+                            Using F-fill()
+                          </button>
+                          <button
+                            hx-get="{% url 'fillna' id=file.file_id colName=col method='bfill' %}"
+                            hx-target="body"
+                          >
+                            Using B-fill()
+                          </button>
+                          <div class="dropdown-submenu">
+                            <button>Descriptive Statistics ▸</button>
+                            <div class="dropdown-submenu-menu">
+                              <button
+                                hx-get="{% url 'fillna' id=file.file_id colName=col method='mean' %}"
+                                hx-target="body"
+                              >
+                                Mean
+                              </button>
+                              <button
+                                hx-get="{% url 'fillna' id=file.file_id colName=col method='median' %}"
+                                hx-target="body"
+                              >
+                                Median
+                              </button>
+                              <button
+                                hx-get="{% url 'fillna' id=file.file_id colName=col method='mode' %}"
+                                hx-target="body"
+                              >
+                                Mode
+                              </button>
+                            </div>
                           </div>
-                      </th>
-                      {% endfor %}
-                  </tr>
-              </thead>
-              <tbody>
-                  {% for row in rows %}
-                  <tr>
-                      {% for value in row %}
-                      <td>{{value}}</td>
-                      {% endfor %}
-                  </tr>
-                  {% endfor %}
-              </tbody>
-          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in rows %}
+            <tr>
+              {% for value in row %}
+              <td>{{value}}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
-  </div>
+    </div>
 
-
-    <div class="table-container">
+    <!--div class="table-container">
       <div class="inner-container">
         <table class="modern-table">
           <thead>
@@ -92,56 +131,145 @@
           <tbody>
             <tr>
               <td class="fixed-column"><b>COUNT</b></td>
-              {% for key, value in details.items %}
+              {% for key, value in describe.items %}
               <td>{{ value.count|floatformat:0 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>MEAN</b></td>
-              {% for key, value in details.items %}
+              {% for key, value in describe.items %}
               <td>{{ value.mean|floatformat:3 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>STD</b></td>
-              {% for key, value in details.items %}
+              {% for key, value in describe.items %}
               <td>{{ value.std|floatformat:3 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>MIN</b></td>
-              {% for key, value in details.items %}
+              {% for key, value in describe.items %}
               <td>{{ value.min|floatformat:3 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>25%</b></td>
-              {% for key, value in details.items %}
+              {% for key, value in describe.items %}
               <td>{{ value|key:'25%'|floatformat:3 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>50%</b></td>
-              {% for key, value in details.items %}
+              {% for key, value in describe.items %}
               <td>{{ value|key:'50%'|floatformat:3 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>75%</b></td>
-              {% for key, value in details.items %}
+              {% for key, value in describe.items %}
               <td>{{ value|key:'75%'|floatformat:3 }}</td>
               {% endfor %}
             </tr>
             <tr>
               <td class="fixed-column"><b>MAX</b></td>
-              {% for key, value in details.items %}
+              {% for key, value in describe.items %}
               <td>{{ value.max|floatformat:3 }}</td>
               {% endfor %}
             </tr>
           </tbody>
         </table>
       </div>
+    </div-->
+
+    <!-- terminal-component.html -->
+    <div class="terminal-container">
+      <div id="toggleTerminal" onclick="toggleTerminal()" class="fixed bottom-0 left-0 w-full bg-zinc-600 text-white px-4 p-1 flex items-center">
+        <img src="/static/images/terminal_icon.png" class="terminal-icon"/>
+        Terminal
+      </div>
+
+      <div
+        id="terminal" class="terminal fixed bottom-0 left-0 w-full bg-black text-green-400 p-4 hidden shadow-lg">
+        <div id="drag-handle"></div>
+
+        <div id="code-container" class="code-container">
+          <!-- Initial Code Block -->
+          <div class="code-node">
+            <div class="code-header">
+              <button class="run-btn" onclick="executeCode(this)">▶</button>
+              <button class="add-node-btn" onclick="addCodeNode()">
+                + Code
+              </button>
+            </div>
+            <textarea
+              class="code-input"
+              placeholder="Write your code here..."
+              oninput="adjustHeight(this)"
+            ></textarea>
+            <div class="code-output">Output will appear here...</div>
+          </div>
+        </div>
+      </div>
     </div>
-      
+    <script>
+      let terminal = document.getElementById("terminal");
+      let dragHandle = document.getElementById("drag-handle");
+      let isResizing = false;
+
+      function toggleTerminal() {
+          terminal.classList.toggle("hidden");
+          if (!terminal.classList.contains("hidden")) {
+              terminal.style.height = "200px"; // Reset height when opened
+          }
+      }
+
+      dragHandle.addEventListener("mousedown", function (event) {
+          event.preventDefault();
+          isResizing = true;
+          document.addEventListener("mousemove", smoothResize);
+          document.addEventListener("mouseup", stopResize);
+      });
+
+      function smoothResize(event) {
+          if (isResizing) {
+              requestAnimationFrame(() => {
+                  let newHeight = window.innerHeight - event.clientY;
+                  if (newHeight < 150) {
+                      terminal.classList.add("hidden"); // Auto-collapse
+                  } else {
+                      terminal.style.height = `${newHeight}px`;
+                  }
+              });
+          }
+      }
+
+      function stopResize() {
+          isResizing = false;
+          document.removeEventListener("mousemove", smoothResize);
+          document.removeEventListener("mouseup", stopResize);
+      }
+
+      // Code Node functionality
+      function addCodeNode() {
+          const container = document.getElementById("code-container");
+          const newNode = document.createElement("div");
+          newNode.classList.add("code-node");
+          newNode.innerHTML = `
+              <div class="code-header">
+                  <button class="run-btn" onclick="executeCode(this)">▶</button>
+                  <button class="add-node-btn" onclick="addCodeNode()">+ Code</button>
+              </div>
+              <textarea class="code-input" placeholder="Write your code here..." oninput="adjustHeight(this)"></textarea>
+              <div class="code-output">Output will appear here...</div>
+          `;
+          container.appendChild(newNode);
+      }
+
+      function adjustHeight(textarea) {
+        textarea.style.height = "auto";
+        textarea.style.height = textarea.scrollHeight + "px";
+      }
+    </script>
   </body>
 </html>
