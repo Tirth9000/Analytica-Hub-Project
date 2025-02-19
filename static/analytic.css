@@ -355,3 +355,75 @@ body {
   display: flex;
 }
 
+
+
+
+.table-container {
+  overflow-x: auto; 
+  max-width: 100%; 
+  margin: 20px; 
+  border: 1px solid #ddd; 
+  border-radius: 20px; 
+  background-color: #f9f9f9;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  }
+  
+  .inner-container {
+    overflow-x: auto; 
+    max-width: 50%; 
+    margin: 10px; 
+    border: 2px solid #ddd; 
+    border-radius: 20px; 
+    background-color: #f9f9f9;
+  }
+  
+  .modern-table {
+  width: 100%; 
+  border-collapse: collapse;
+  font-family: 'Arial', sans-serif;
+  text-align: left;
+  }
+  
+  .modern-table thead tr th {
+  position: sticky; 
+  top: 0;
+  z-index: 2;
+  background-color: #383838; 
+  color: white; 
+  padding: 3px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  white-space: nowrap; 
+  }
+  
+  .fixed-column {
+  position: sticky; 
+  left: 0;
+  z-index: 1; 
+  background-color: #f4f4f4;
+  font-weight: bold;
+  padding: 3px;
+  border: px solid #565656; 
+  white-space: nowrap; 
+  }
+          
+  thead .fixed-column {
+  z-index: 3; 
+  background-color: #383838; 
+  color: white; 
+  }
+  
+  .modern-table td, .modern-table th {
+  padding: 3px 5px;
+  border: 1px solid #565656;
+  white-space: nowrap; 
+  }
+  
+  .modern-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2; 
+  }
+  
+  .modern-table tbody tr:hover {
+  background-color: #ddd; 
+  } 
