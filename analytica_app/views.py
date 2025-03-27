@@ -2,12 +2,15 @@ from django.shortcuts import render, redirect, HttpResponse
 from templates import *
 from .models import AnalysisFile
 from .redis_utils import *
+import io, sys
 import pandas as pd
+import requests
 
 
 # Create your views here.
 def LandingPage(request):
     return render(request, 'landing.html')
+
 
 def AnalyticPage(request, id):
     fileObj = AnalysisFile.objects.get(file_id = id)
@@ -21,6 +24,7 @@ def AnalyticPage(request, id):
         return render(request, 'analytic.html', {"file": fileObj, "columns": columns, "rows": rows,  'describe': describe, 'desc_columns': desc_columns})
     return render(request, 'analytic.html', {"file": fileObj, "columns": columns, "rows": rows,  'describe' : describe, 'desc_columns': desc_columns})
 
+
 def RenameFile(request, id):
     fileobj = AnalysisFile.objects.get(file_id = id)
     print('hello')
@@ -33,12 +37,14 @@ def RenameFile(request, id):
             fileobj.save()
     return redirect('analytic_page', id)
 
+
 def Details(request, id, colName):
     df = get_dataframe_from_redis_pickle('redis_df') 
     columns = list(df.describe())
     describe = df.describe().to_dict()
     nullcount = df[colName].isnull().sum()
     return render(request, 'components/details.html', {'describe': describe, 'columns': columns, 'nullCount': nullcount})
+
 
 def UploadFile(request):
     files = AnalysisFile.objects.all()
@@ -73,3 +79,38 @@ def FillNaN(request, id, colName, method):
     df.to_csv(fileobj.file.path, index=False)
     store_dataframe_in_redis(df, 'redis_df')
     return redirect('analytic_page', id=id)
+
+
+def PythonCodeSpace(request):
+    if request.method == 'POST':
+        code = request.POST.get('code')
+        capture_stdout = io.StringIO()
+        sys.stdout = capture_stdout
+        output = {"print": "", "error": ""}
+        try:
+            exec(code)
+            output["print"] = capture_stdout.getvalue()
+            return HttpResponse(output["print"])
+        except Exception as e:
+            output["error"] = str(e)
+            return HttpResponse(output["error"])
+        finally:
+            sys.stdout = sys.__stdout__
+    return HttpResponse("hello")
+
+
+session = requests.Session()
+
+def ChatWithCSV(request, id):
+    url = "http://analytica_flask:5000/upload-file"
+    data = {'id': id}
+    res = session.post(url, json=data)
+
+    if request.method == "POST":
+        url = "http://analytica_flask:5000/chat-response"
+        client_msg = request.POST.get('msg')
+        data = {'message': client_msg}
+        result = session.post(url, json=data)
+        return HttpResponse(result)
+    return render(request, 'live_chat.html', {"file_id": id})
+

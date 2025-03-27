@@ -26,6 +26,7 @@
         </div>
       </div>
       <div class="header-right">
+        <a class="rainbow-btn" href="{% url 'chatwithCSV' id=file.file_id %}"><img src="/static/images/pie-chart.gif"></a>
         <button class="file-btn"><span class="icon">💾</span> Save</button>
         <button class="file-btn"><span class="icon">🖨️</span> Print</button>
         <button class="file-btn"><span class="icon">🔗</span> Share</button>
@@ -130,21 +131,22 @@
 
       <div
         id="terminal"
-        class="terminal fixed bottom-0 left-0 w-full bg-black text-green-400 p-4 hidden shadow-lg">
+        class="terminal fixed bottom-0 left-0 w-full bg-black text-green-400 p-0 hidden shadow-lg">
         <div id="drag-handle"></div>
 
         <div id="code-container" class="code-container">
           <div class="code-node">
             <div class="code-header">
-              <button class="run-btn" onclick="executeCode(this)">▶</button>
-              <button class="add-node-btn" onclick="addCodeNode()">
-                + Code
-              </button>
+              <div class="button-group">
+                <button class="add-node-btn" onclick="addCodeNode()">➕</button>
+                <button class="run-btn" type="submit" hx-on:click="document.querySelector('.code-form').requestSubmit();">▶</button>
+                <button class="extra-btn">⚙️</button>
+              </div>
             </div>
-            <textarea
-              class="code-input"
-              placeholder="Write your code here..."
-              oninput="adjustHeight(this)"></textarea>
+            <form class="code-form" hx-post="{% url 'code_output' %}" hx-trigger="submit" hx-target=".code-output" hx-swap="innerHTML">
+              {% csrf_token %}
+              <textarea name="code" class="code-input" placeholder="Write your code here..." oninput="adjustHeight(this)"></textarea>
+            </form>
             <div class="code-output">Output will appear here...</div>
           </div>
         </div>
@@ -211,10 +213,16 @@
         newNode.classList.add("code-node");
         newNode.innerHTML = `
             <div class="code-header">
-                <button class="run-btn" onclick="executeCode(this)">▶</button>
-                <button class="add-node-btn" onclick="addCodeNode()">+ Code</button>
+              <div class="button-group">
+                <button class="add-node-btn" onclick="addCodeNode()">➕</button>
+                <button class="run-btn" type="submit" hx-on:click="document.querySelector('.code-form').requestSubmit();">▶</button>
+                <button class="extra-btn">⚙️</button>
+              </div>
             </div>
-            <textarea class="code-input" placeholder="Write your code here..." oninput="adjustHeight(this)"></textarea>
+            <form class="code-form" hx-post="{% url 'code_output' %}" hx-trigger="submit" hx-target=".code-output" hx-swap="innerHTML">
+              {% csrf_token %}
+              <textarea name="code" class="code-input" placeholder="Write your code here..." oninput="adjustHeight(this)"></textarea>
+            </form>
             <div class="code-output">Output will appear here...</div>
         `;
         container.appendChild(newNode);
