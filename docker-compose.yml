@@ -57,5 +57,17 @@ services:
     depends_on:
       - redis
 
+  flask:
+    build: 
+      context: .
+      dockerfile: flask_api_utils/flask.Dockerfile  # Now, Dockerfile sees the entire project
+    container_name: analytica_flask
+    restart: always
+    volumes:
+      - ./flask_api_utils:/app/flask_api_utils
+    ports:
+      - "8080:5000"
+
+
 volumes:
   mysql_data:

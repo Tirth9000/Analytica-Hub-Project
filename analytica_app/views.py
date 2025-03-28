@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse
 from templates import *
-from .models import AnalysisFile
+from .models import AnalyticaFiles
 from .redis_utils import *
 import io, sys
 import pandas as pd
@@ -13,7 +13,7 @@ def LandingPage(request):
 
 
 def AnalyticPage(request, id):
-    fileObj = AnalysisFile.objects.get(file_id = id)
+    fileObj = AnalyticaFiles.objects.get(file_id = id)
     df = pd.read_csv(fileObj.file)
     store_dataframe_in_redis(df, 'redis_df')
     columns = df.columns.tolist()
@@ -26,7 +26,7 @@ def AnalyticPage(request, id):
 
 
 def RenameFile(request, id):
-    fileobj = AnalysisFile.objects.get(file_id = id)
+    fileobj = AnalyticaFiles.objects.get(file_id = id)
     print('hello')
     if request.method == 'GET':
         print('world')
@@ -47,12 +47,12 @@ def Details(request, id, colName):
 
 
 def UploadFile(request):
-    files = AnalysisFile.objects.all()
+    files = AnalyticaFiles.objects.all()
     return render(request, 'upload_file.html', {"files": files})
 
 
 def DropNaN(request, id, colName):
-    fileobj = AnalysisFile.objects.get(file_id = id)
+    fileobj = AnalyticaFiles.objects.get(file_id = id)
     df = get_dataframe_from_redis_pickle('redis_df')
     removed_nan_df = df.dropna(subset=[colName])
     print(type(removed_nan_df))
@@ -62,7 +62,7 @@ def DropNaN(request, id, colName):
 
 
 def FillNaN(request, id, colName, method):
-    fileobj = AnalysisFile.objects.get(file_id=id)
+    fileobj = AnalyticaFiles.objects.get(file_id=id)
     df = get_dataframe_from_redis_pickle('redis_df')
     if method =='ffill':
         df[colName] = df[colName].ffill()

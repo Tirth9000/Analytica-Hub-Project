@@ -4,6 +4,7 @@ python-decouple
 django-celery-results
 pymysql
 mysqlclient
+requests
 celery
 redis
 pandas

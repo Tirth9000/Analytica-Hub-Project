@@ -143,7 +143,7 @@
                 <button class="extra-btn">⚙️</button>
               </div>
             </div>
-            <form class="code-form" hx-post="{% url 'code_output' %}" hx-trigger="submit" hx-target=".code-output" hx-swap="innerHTML">
+            <form class="code-form" hx-post="{% url 'codespace' id=file.file_id%}" hx-trigger="submit" hx-target=".code-output" hx-swap="innerHTML">
               {% csrf_token %}
               <textarea name="code" class="code-input" placeholder="Write your code here..." oninput="adjustHeight(this)"></textarea>
             </form>
@@ -219,7 +219,7 @@
                 <button class="extra-btn">⚙️</button>
               </div>
             </div>
-            <form class="code-form" hx-post="{% url 'code_output' %}" hx-trigger="submit" hx-target=".code-output" hx-swap="innerHTML">
+            <form class="code-form" hx-post="{% url 'codespace' id=file.file_id %}" hx-trigger="submit" hx-target=".code-output" hx-swap="innerHTML">
               {% csrf_token %}
               <textarea name="code" class="code-input" placeholder="Write your code here..." oninput="adjustHeight(this)"></textarea>
             </form>
