@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dark Themed Chat App</title>
+    <script src="https://unpkg.com/htmx.org"></script>
 </head>
 <body>
     <div class="chat-container">
@@ -11,7 +12,7 @@
             <div class="message received">Hello! How can I help you?</div>
         </div>
         <div class="input-box">
-            <form id="chatForm" method="post" hx-post="{% url 'chatwithCSV' id=file_id %}" hx-trigger="submit" hx-target=".waitingForResponse" hx-swap="outerHTML">
+            <form id="chatForm" method="POST" hx-post="{% url 'chatwithCSV' id=file_id %}" hx-trigger="submit" hx-target=".waitingForResponse" hx-swap="outerHTML">
                 {% csrf_token %}
                 <input type="text" id="messageInput" name="msg" placeholder="Type a message..." autocomplete="off">
                 <button type="submit">Send</button>

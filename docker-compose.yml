@@ -64,7 +64,7 @@ services:
     container_name: analytica_flask
     restart: always
     volumes:
-      - ./flask_api_utils:/app/flask_api_utils
+      - .:/app
     ports:
       - "8080:5000"
 

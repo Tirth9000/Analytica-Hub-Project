@@ -102,10 +102,10 @@ def PythonCodeSpace(request):
 session = requests.Session()
 
 def ChatWithCSV(request, id):
+    print('upload file')
     url = "http://analytica_flask:5000/upload-file"
     data = {'id': id}
     res = session.post(url, json=data)
-
     if request.method == "POST":
         url = "http://analytica_flask:5000/chat-response"
         client_msg = request.POST.get('msg')

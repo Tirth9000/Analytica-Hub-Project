@@ -36,7 +36,7 @@ def execute_query(query, params=None):
     connection.close()
     return result
 
-@app.route('/upload-file', methods=['POST'])
+@app.route('/upload-file', methods=['GET', 'POST'])
 def FileLoader(): 
     data = request.json
     query = "SELECT file FROM AnalyticaFiles WHERE file_id = %s"
@@ -49,11 +49,12 @@ def ChatResponse():
     file_add = session.get('file_address')
     df = pai.read_csv('Media/'+file_add)
     data = request.json
+    print(df)
     json_str = str(df.chat(data.get("msg", "")))
+    print(json_str)
     response = json.dumps({"response": json_str})
     return {"status": True, "message": response}
 
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-    
