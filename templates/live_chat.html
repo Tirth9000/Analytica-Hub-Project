@@ -14,7 +14,7 @@
         <div class="input-box">
             <form id="chatForm" method="POST" hx-post="{% url 'chatwithCSV' id=file_id %}" hx-trigger="submit" hx-target=".waitingForResponse" hx-swap="outerHTML">
                 {% csrf_token %}
-                <input type="text" id="messageInput" name="msg" placeholder="Type a message..." autocomplete="off">
+                <input type="text" class="messageInput" id="messageInput" name="msg" placeholder="Type a message..." autocomplete="off">
                 <button type="submit">Send</button>
             </form>
         </div>
@@ -22,7 +22,7 @@
 
     <script>
         document.getElementById("chatForm").addEventListener("submit", function(event) {
-            event.preventDefault();
+
             let input = document.getElementById("messageInput");
             let messageText = input.value.trim();
             if (messageText === "") return;
@@ -36,82 +36,107 @@
             chatBox.scrollTop = chatBox.scrollHeight;
 
             let loadingDiv = document.createElement("div");
-            loadingDiv.classList.add("waitingForResponse");
+            loadingDiv.classList.add("waitingForResponse", "received");
             loadingDiv.innerHTML='<img src="/static/images/bionic-eye.gif">'
             chatBox.appendChild(loadingDiv);
 
             setTimeout(()=> {
                 input.value = "";
-            }, 200);
+            }, 700);
         });
     </script>
 
     <style>
-        .chat-container {
-            width: 300px;
-            background: #1e1e1e;
+        body {
+            font-family: Arial, sans-serif;
+            background: #121212;
             color: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-
-        .chat-box {
-            height: 300px;
-            overflow-y: auto;
+        .messageInput {
+            width: 93%;
+        }
+        #chatForm {
             padding: 10px;
-            border: 1px solid #444;
-            border-radius: 5px;
-            background: #252525;
+            width: 100%;
         }
-
+        .chat-container {
+            width: 98%;
+            height: 100%;
+            background: #1e1e1e;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .chat-box {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
         .message {
-            max-width: 80%;
-            padding: 8px;
+            max-width: 70%;
+            padding: 8px 12px;
             margin: 5px;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 15px;
+            word-wrap: break-word;
         }
-
+        .sent {
+            background: #0078ff;
+            align-self: flex-end;
+        }
         .received {
-            background: #444;
-            color: white;
+            background: #333;
             align-self: flex-start;
         }
-
-        .sent {
-            background: #007bff;
-            color: white;
-            align-self: flex-end;
-            text-align: right;
-            margin-left: auto;
-        }
-
         .input-box {
             display: flex;
-            margin-top: 10px;
+            padding: 10px;
+            background: #222;
+            border-top: 1px solid #333;
         }
-
-        input {
+        .input-box input {
             flex: 1;
-            padding: 8px;
+            padding: 10px;
             border: none;
             border-radius: 5px;
+            background: #333;
+            color: white;
             outline: none;
         }
-
-        button {
-            background: #007bff;
-            color: white;
+        .input-box button {
+            margin-left: 10px;
+            padding: 10px;
             border: none;
-            padding: 8px 12px;
-            margin-left: 5px;
-            border-radius: 5px;
+            background: #0078ff;
+            color: white;
             cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .input-box button:hover {
+            background: #005bb5;
         }
 
-        button:hover {
-            background: #0056b3;
+        .waitingForResponse {
+            overflow: hidden;
+            padding: 5px;
+            background: #333;
+            border-radius: 25px;
+            display: flex
+        }
+
+        .waitingForResponse img {
+            border-radius: 23px;
+            width: 70px;
+            height: 70px;
         }
     </style>
 </body>

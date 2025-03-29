@@ -49,11 +49,13 @@ def ChatResponse():
     file_add = session.get('file_address')
     df = pai.read_csv('Media/'+file_add)
     data = request.json
-    print(df)
-    json_str = str(df.chat(data.get("msg", "")))
-    print(json_str)
-    response = json.dumps({"response": json_str})
-    return {"status": True, "message": response}
+    if data:
+        json_str = str(df.chat(data+" And answer in breaf statements only."))
+        response = json.dumps({"response": json_str, "status": True})
+    else:
+        response = json.dumps({"response": "Data not found!", "status": False})
+    return response
+
 
 
 if __name__ == "__main__":

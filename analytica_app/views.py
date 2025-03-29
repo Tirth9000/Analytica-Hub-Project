@@ -4,7 +4,7 @@ from .models import AnalyticaFiles
 from .redis_utils import *
 import io, sys
 import pandas as pd
-import requests
+import requests, json
 
 
 # Create your views here.
@@ -102,15 +102,13 @@ def PythonCodeSpace(request):
 session = requests.Session()
 
 def ChatWithCSV(request, id):
-    print('upload file')
     url = "http://analytica_flask:5000/upload-file"
     data = {'id': id}
     res = session.post(url, json=data)
     if request.method == "POST":
         url = "http://analytica_flask:5000/chat-response"
         client_msg = request.POST.get('msg')
-        data = {'message': client_msg}
-        result = session.post(url, json=data)
-        return HttpResponse(result)
+        data = session.post(url, json=client_msg)
+        result = data.json()
+        return HttpResponse(f'<div class="message received">{result["response"]}</div>')
     return render(request, 'live_chat.html', {"file_id": id})
-
