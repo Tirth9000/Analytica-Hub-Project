@@ -6,7 +6,6 @@ import io, sys
 import pandas as pd
 import requests, json
 
-
 # Create your views here.
 def LandingPage(request):
     return render(request, 'landing.html')
@@ -110,5 +109,7 @@ def ChatWithCSV(request, id):
         client_msg = request.POST.get('msg')
         data = session.post(url, json=client_msg)
         result = data.json()
+        if result['type'] == 'img':
+            return HttpResponse(f'<img class="message received-img" src="/{result["response"]}">')
         return HttpResponse(f'<div class="message received">{result["response"]}</div>')
     return render(request, 'live_chat.html', {"file_id": id})

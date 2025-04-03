@@ -1,10 +1,10 @@
-from flask import Flask, request, session
+from flask import Flask, request, session, send_file, send_from_directory
 from flask_cors import CORS
 import pandasai as pai
 import os, pandas as pd
 from decouple import config
 import mysql.connector
-import json
+import json, shutil
 
 pai.api_key.set("PAI-4e571b7d-528f-4954-927b-3ee59683b9ce")
 
@@ -50,13 +50,41 @@ def ChatResponse():
     df = pai.read_csv('Media/'+file_add)
     data = request.json
     if data:
-        json_str = str(df.chat(data+" And answer in breaf statements only."))
-        response = json.dumps({"response": json_str, "status": True})
+        gen_response = df.chat(data+" And Provide the response as a single-line string statement instead of a structured format only. If generating plot, make proper naming with proper spacing.")
+        if str(type(gen_response)) == "<class 'pandasai.core.response.chart.ChartResponse'>":
+            img_name = str(gen_response).replace('exports/charts/', "")
+            img_path = f'Media/plot_img/{img_name}'
+            gen_response.save(img_path)
+            folder_path = "exports/charts"
+            shutil.rmtree(folder_path)
+            print(img_path)
+            response = json.dumps({"response": img_path, "type": 'img', "status": True})
+            return response
+        response = json.dumps({"response": str(gen_response), "type": 'text', "status": True})
     else:
-        response = json.dumps({"response": "Data not found!", "status": False})
+        response = json.dumps({"response": "Data not found!", "type": 'error', "status": False})
     return response
+
+
+EXPORTS_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "../exports/charts"))
+
+@app.route('/getImg/<filename>', methods=['GET'])
+def get_img(filename):
+    """Serve images dynamically from the exports/charts folder."""
+    file_path = os.path.join(EXPORTS_FOLDER, filename)
+
+    # Debugging logs
+    app.logger.debug(f"Requested image: {filename}")
+    app.logger.debug(f"Resolved file path: {file_path}")
+
+    if not os.path.exists(file_path):
+        app.logger.error(f"File not found: {file_path}")
+        return json.dumps({"response": "File not found!", "type": "error", "status": False}), 404
+
+    return send_from_directory(EXPORTS_FOLDER, filename)
 
 
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+    

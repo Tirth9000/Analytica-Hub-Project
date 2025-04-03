@@ -42,7 +42,7 @@
 
             setTimeout(()=> {
                 input.value = "";
-            }, 700);
+            }, 400);
         });
     </script>
 
@@ -58,9 +58,10 @@
             margin: 0;
         }
         .messageInput {
-            width: 93%;
+            width: 90%;
         }
         #chatForm {
+            display: contents;
             padding: 10px;
             width: 100%;
         }
@@ -95,6 +96,12 @@
         .received {
             background: #333;
             align-self: flex-start;
+        }
+        .received-img {
+            background: #333;
+            padding: 5px;
+            height: 75%;
+            width: 70%;
         }
         .input-box {
             display: flex;
