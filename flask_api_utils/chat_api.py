@@ -65,24 +65,72 @@ def ChatResponse():
         response = json.dumps({"response": "Data not found!", "type": 'error', "status": False})
     return response
 
-
-EXPORTS_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "../exports/charts"))
-
-@app.route('/getImg/<filename>', methods=['GET'])
-def get_img(filename):
-    """Serve images dynamically from the exports/charts folder."""
-    file_path = os.path.join(EXPORTS_FOLDER, filename)
-
-    # Debugging logs
-    app.logger.debug(f"Requested image: {filename}")
-    app.logger.debug(f"Resolved file path: {file_path}")
-
-    if not os.path.exists(file_path):
-        app.logger.error(f"File not found: {file_path}")
-        return json.dumps({"response": "File not found!", "type": "error", "status": False}), 404
-
-    return send_from_directory(EXPORTS_FOLDER, filename)
-
+@app.route('/api-autoclean', methods=['GET'])
+def AutoClean():
+    pass 
+    data = request.json
+    query = "SELECT file FROM AnalyticaFiles WHERE file_id = %s"
+    query_data = execute_query(query, [data['id']])
+    
+    new_df = df.chat(f"""You are a professional data cleaning assistant. Your task is to clean a given tabular dataset (CSV or DataFrame) and return a cleaned version for data analysis and modeling. 
+                Follow the steps below with intelligent, context-aware logic.
+                OBJECTIVE:
+                Clean the dataset thoroughly and return the cleaned version as a raw CSV format (no explanations, no charts).
+                ---
+                CLEANING STEPS:
+                1.  Standardize Column Names:
+                - Convert all column names to lowercase and snake_case.
+                - Remove special characters, trim whitespace.
+                2. Handle Special & Uncertain Values:
+                - Convert uncertain strings like:
+                    - `"unknown"`, `"n/a"`, `"na"`, `"error"`, `"null"`, `"missing"`, `"not available"`, `"--"` etc.
+                    - To standard missing values (`np.nan` or `None`) for all data types.
+                - Apply this for **all** column types: numeric, categorical, date, etc.
+                3. Remove Duplicate Rows:
+                - Drop rows that are fully duplicated.
+                - Drop duplicates conditionally if specific key columns exist.
+                4. Handle Missing Data:
+                - Drop columns with more than 50% missing values.
+                - For **numerical columns**:
+                    - Use mean (if normally distributed), median (if skewed).
+                - For **categorical columns**:
+                    - Use mode or most frequent category.
+                - For **datetime columns**:
+                    - Use forward/backward fill or infer based on sequence.
+                - For special columns (e.g., country from email): infer logically if possible.
+                5. Outlier Detection & Treatment:
+                - Use IQR and/or Z-score method to identify outliers.
+                - Do **not** remove valid but extreme values (e.g., age 99, sales 10000).
+                - Remove/cap outliers if:
+                    - Z > 3 or falls outside 1.5×IQR,
+                    - They distort distribution,
+                    - Count of such points is low.
+                - Apply log/box-cox transformation if highly skewed.
+                - Do **not** create extra outlier columns unless explicitly required.
+                6. Convert Data Types Appropriately:
+                - Convert object-type numerics to actual numeric (remove `$`, `%`, `,`).
+                - Convert valid date strings to datetime.
+                - Convert suitable columns to `category` dtype.
+                7. Clean Strings and Categorical Values:
+                - Strip leading/trailing spaces.
+                - Convert to lowercase or title case consistently.
+                - Normalize similar categories (e.g., “Cash ”, “cash”, “CASH” → “cash”).
+                - Remove noise characters (e.g., special symbols in names or categories).
+                8. Numeric & Logic Checks:
+                - Ensure numeric fields like price, quantity, or scores are non-negative unless valid negatives (like returns).
+                - Validate rating scales (e.g., clip to 0–5).
+                - Remove or fix non-parsable numbers.
+                9. Final Output:
+                - Ensure every column is usable for analysis.
+                - Dataset must be free of messy values, uncertainty terms, and type inconsistencies.
+                - Return the cleaned DataFrame **only** as CSV.
+                ---
+                DO NOT:
+                - Leave uncertain values untreated.
+                - Add additional columns unless required for fixing.
+                - Return any description, explanation, or plots.
+                Treat values with real-world and statistical understanding — act like a human data analyst cleaning a business-critical dataset.""")
+    return response
 
 
 if __name__ == "__main__":

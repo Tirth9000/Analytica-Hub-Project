@@ -26,7 +26,6 @@ def AnalyticPage(request, id):
 
 def RenameFile(request, id):
     fileobj = AnalyticaFiles.objects.get(file_id = id)
-    print('hello')
     if request.method == 'GET':
         print('world')
         new_file_name = request.GET.get("new_name", "").strip()
@@ -37,17 +36,17 @@ def RenameFile(request, id):
     return redirect('analytic_page', id)
 
 
+def UploadFile(request):
+    files = AnalyticaFiles.objects.all()
+    return render(request, 'upload_file.html', {"files": files})
+
+
 def Details(request, id, colName):
     df = get_dataframe_from_redis_pickle('redis_df') 
     columns = list(df.describe())
     describe = df.describe().to_dict()
     nullcount = df[colName].isnull().sum()
     return render(request, 'components/details.html', {'describe': describe, 'columns': columns, 'nullCount': nullcount})
-
-
-def UploadFile(request):
-    files = AnalyticaFiles.objects.all()
-    return render(request, 'upload_file.html', {"files": files})
 
 
 def DropNaN(request, id, colName):
@@ -113,3 +112,12 @@ def ChatWithCSV(request, id):
             return HttpResponse(f'<img class="message received-img" src="/{result["response"]}">')
         return HttpResponse(f'<div class="message received">{result["response"]}</div>')
     return render(request, 'live_chat.html', {"file_id": id})
+
+
+import time
+def AutoCleaning(request, id):
+    if request.method == "POST":
+        return render(request, 'components/skeleton_table.html', {"id": id}) 
+    if request.method == 'GET':
+        time.sleep(10)
+        return HttpResponse("""<div>hello</div>""")

@@ -32,5 +32,6 @@ urlpatterns = [
 
     path('analytic-page/<str:id>/python-codespace', PythonCodeSpace, name='codespace'),
     path('analytic-page/<str:id>/live-chat', ChatWithCSV, name='chatwithCSV'),
+    path('analytic-page/<str:id>/auto-clean', AutoCleaning, name='autoclean'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

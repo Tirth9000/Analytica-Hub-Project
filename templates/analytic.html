@@ -26,6 +26,13 @@
         </div>
       </div>
       <div class="header-right">
+        <form method="post"
+      hx-post="{% url 'autoclean' id=file.file_id %}" 
+      hx-target=".csv-table" 
+      hx-swap="outerHTML">
+        {% csrf_token %}
+          <button type="submit">button</button>
+        </form>
         <a class="rainbow-btn" href="{% url 'chatwithCSV' id=file.file_id %}"><img src="/static/images/pie-chart.gif"></a>
         <button class="file-btn"><span class="icon">💾</span> Save</button>
         <button class="file-btn"><span class="icon">🖨️</span> Print</button>

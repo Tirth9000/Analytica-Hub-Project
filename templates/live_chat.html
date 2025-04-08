@@ -10,9 +10,10 @@
     <div class="chat-container">
         <div class="chat-box" id="chatBox">
             <div class="message received">Hello! How can I help you?</div>
+            <!--div class="waitingForResponse received"><img src="/static/images/bionic-eye.gif"></div-->
         </div>
         <div class="input-box">
-            <form id="chatForm" method="POST" hx-post="{% url 'chatwithCSV' id=file_id %}" hx-trigger="submit" hx-target=".waitingForResponse" hx-swap="outerHTML">
+            <form id="chatForm" method="POST" hx-post="{% url 'chatwithCSV' id=file_id %}" hx-trigger="submit" hx-target="#waitingResponseContainer" hx-swap="outerHTML">
                 {% csrf_token %}
                 <input type="text" class="messageInput" id="messageInput" name="msg" placeholder="Type a message..." autocomplete="off">
                 <button type="submit">Send</button>
@@ -33,16 +34,19 @@
             messageDiv.classList.add("message", "sent");
             messageDiv.textContent = messageText;
             chatBox.appendChild(messageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
 
             let loadingDiv = document.createElement("div");
             loadingDiv.classList.add("waitingForResponse", "received");
+            loadingDiv.id = "waitingResponseContainer"; 
             loadingDiv.innerHTML='<img src="/static/images/bionic-eye.gif">'
             chatBox.appendChild(loadingDiv);
 
+            chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: "smooth" });
+
             setTimeout(()=> {
                 input.value = "";
-            }, 400);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 600);
         });
     </script>
 
@@ -67,7 +71,7 @@
         }
         .chat-container {
             width: 98%;
-            height: 100%;
+            height: 99%;
             background: #1e1e1e;
             border-radius: 10px;
             display: flex;
@@ -81,9 +85,11 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+            justify-content: flex-start;
         }
         .message {
-            max-width: 70%;
+            justify-content: end;
+            max-width: 50%;
             padding: 8px 12px;
             margin: 5px;
             border-radius: 15px;
@@ -133,7 +139,7 @@
         }
 
         .waitingForResponse {
-            overflow: hidden;
+            overflow: visible;
             padding: 5px;
             background: #333;
             border-radius: 25px;
