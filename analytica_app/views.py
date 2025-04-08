@@ -4,7 +4,7 @@ from .models import AnalyticaFiles
 from .redis_utils import *
 import io, sys
 import pandas as pd
-import requests, json
+import requests, io, json
 
 # Create your views here.
 def LandingPage(request):
@@ -27,7 +27,6 @@ def AnalyticPage(request, id):
 def RenameFile(request, id):
     fileobj = AnalyticaFiles.objects.get(file_id = id)
     if request.method == 'GET':
-        print('world')
         new_file_name = request.GET.get("new_name", "").strip()
         if new_file_name:
             print(new_file_name)
@@ -53,7 +52,6 @@ def DropNaN(request, id, colName):
     fileobj = AnalyticaFiles.objects.get(file_id = id)
     df = get_dataframe_from_redis_pickle('redis_df')
     removed_nan_df = df.dropna(subset=[colName])
-    print(type(removed_nan_df))
     removed_nan_df.to_csv(fileobj.file.path, index=False)
     store_dataframe_in_redis(removed_nan_df, 'redis_df')
     return redirect('analytic_page', id=id)
@@ -119,5 +117,9 @@ def AutoCleaning(request, id):
     if request.method == "POST":
         return render(request, 'components/skeleton_table.html', {"id": id}) 
     if request.method == 'GET':
-        time.sleep(10)
-        return HttpResponse("""<div>hello</div>""")
+        url = f"http://analytica_flask:5000/api/autoclean/{id}" 
+        response = session.get(url)
+        data = response.json()
+        columns = data["columns"]
+        rows = data["rows"]
+        return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows})

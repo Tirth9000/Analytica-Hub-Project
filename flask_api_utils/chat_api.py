@@ -5,6 +5,7 @@ import os, pandas as pd
 from decouple import config
 import mysql.connector
 import json, shutil
+from io import StringIO
 
 pai.api_key.set("PAI-4e571b7d-528f-4954-927b-3ee59683b9ce")
 
@@ -46,8 +47,8 @@ def FileLoader():
 
 @app.route('/chat-response', methods=['GET', 'POST'])
 def ChatResponse():
-    file_add = session.get('file_address')
-    df = pai.read_csv('Media/'+file_add)
+    file_address = session.get('file_address')
+    df = pai.read_csv('Media/'+file_address)
     data = request.json
     if data:
         gen_response = df.chat(data+" And Provide the response as a single-line string statement instead of a structured format only. If generating plot, make proper naming with proper spacing.")
@@ -57,7 +58,6 @@ def ChatResponse():
             gen_response.save(img_path)
             folder_path = "exports/charts"
             shutil.rmtree(folder_path)
-            print(img_path)
             response = json.dumps({"response": img_path, "type": 'img', "status": True})
             return response
         response = json.dumps({"response": str(gen_response), "type": 'text', "status": True})
@@ -65,71 +65,42 @@ def ChatResponse():
         response = json.dumps({"response": "Data not found!", "type": 'error', "status": False})
     return response
 
-@app.route('/api-autoclean', methods=['GET'])
-def AutoClean():
-    pass 
-    data = request.json
+@app.route('/api/autoclean/<fileId>', methods=['GET'])
+def AutoClean(fileId):
     query = "SELECT file FROM AnalyticaFiles WHERE file_id = %s"
-    query_data = execute_query(query, [data['id']])
-    
-    new_df = df.chat(f"""You are a professional data cleaning assistant. Your task is to clean a given tabular dataset (CSV or DataFrame) and return a cleaned version for data analysis and modeling. 
-                Follow the steps below with intelligent, context-aware logic.
-                OBJECTIVE:
-                Clean the dataset thoroughly and return the cleaned version as a raw CSV format (no explanations, no charts).
-                ---
-                CLEANING STEPS:
-                1.  Standardize Column Names:
-                - Convert all column names to lowercase and snake_case.
-                - Remove special characters, trim whitespace.
-                2. Handle Special & Uncertain Values:
-                - Convert uncertain strings like:
-                    - `"unknown"`, `"n/a"`, `"na"`, `"error"`, `"null"`, `"missing"`, `"not available"`, `"--"` etc.
-                    - To standard missing values (`np.nan` or `None`) for all data types.
-                - Apply this for **all** column types: numeric, categorical, date, etc.
-                3. Remove Duplicate Rows:
-                - Drop rows that are fully duplicated.
-                - Drop duplicates conditionally if specific key columns exist.
-                4. Handle Missing Data:
-                - Drop columns with more than 50% missing values.
-                - For **numerical columns**:
-                    - Use mean (if normally distributed), median (if skewed).
-                - For **categorical columns**:
-                    - Use mode or most frequent category.
-                - For **datetime columns**:
-                    - Use forward/backward fill or infer based on sequence.
-                - For special columns (e.g., country from email): infer logically if possible.
-                5. Outlier Detection & Treatment:
-                - Use IQR and/or Z-score method to identify outliers.
-                - Do **not** remove valid but extreme values (e.g., age 99, sales 10000).
-                - Remove/cap outliers if:
-                    - Z > 3 or falls outside 1.5×IQR,
-                    - They distort distribution,
-                    - Count of such points is low.
-                - Apply log/box-cox transformation if highly skewed.
-                - Do **not** create extra outlier columns unless explicitly required.
-                6. Convert Data Types Appropriately:
-                - Convert object-type numerics to actual numeric (remove `$`, `%`, `,`).
-                - Convert valid date strings to datetime.
-                - Convert suitable columns to `category` dtype.
-                7. Clean Strings and Categorical Values:
-                - Strip leading/trailing spaces.
-                - Convert to lowercase or title case consistently.
-                - Normalize similar categories (e.g., “Cash ”, “cash”, “CASH” → “cash”).
-                - Remove noise characters (e.g., special symbols in names or categories).
-                8. Numeric & Logic Checks:
-                - Ensure numeric fields like price, quantity, or scores are non-negative unless valid negatives (like returns).
-                - Validate rating scales (e.g., clip to 0–5).
-                - Remove or fix non-parsable numbers.
-                9. Final Output:
-                - Ensure every column is usable for analysis.
-                - Dataset must be free of messy values, uncertainty terms, and type inconsistencies.
-                - Return the cleaned DataFrame **only** as CSV.
-                ---
-                DO NOT:
-                - Leave uncertain values untreated.
-                - Add additional columns unless required for fixing.
-                - Return any description, explanation, or plots.
-                Treat values with real-world and statistical understanding — act like a human data analyst cleaning a business-critical dataset.""")
+    query_data = execute_query(query, [fileId])
+    df = pai.read_csv('Media/' + query_data[0]['file']) 
+    print(df)
+    ai_response = df.chat(f"""You are a Data Cleaning Assistant.
+        TASK: Clean the given CSV/DataFrame and return the CLEANED DATA as raw CSV (No explanation, No charts).
+        
+        BASIC CLEANING STEPS:
+        1. Standardize Column Names:
+        - Convert all column names to lowercase.
+        - Replace spaces & special characters with underscores.
+
+        2. Remove Duplicates:
+        - Drop fully duplicate rows.
+
+        3. Handle Missing Values:
+        - Drop columns with >50% missing values.
+        - Fill nulls:
+        - Numerical Columns → Mean or Median.
+        - Categorical Columns → Mode.
+        - Datetime Columns → Forward Fill → Backward Fill.
+
+        4. Convert Data Types:
+        - Convert numeric-looking strings to numbers.
+        - Convert date strings to datetime.
+
+        5. Final Step:
+        - Strip spaces from strings.
+        - Return cleaned DataFrame as raw CSV in StringResponse.""")
+    formated_response = StringIO(str(ai_response))
+    cleaned_df = pd.read_csv(formated_response)
+    columns = cleaned_df.columns.tolist()
+    rows = cleaned_df.values.tolist()
+    response = json.dumps({'columns': columns, 'rows': rows})
     return response
 
 
