@@ -65,6 +65,8 @@ def ChatResponse():
         response = json.dumps({"response": "Data not found!", "type": 'error', "status": False})
     return response
 
+
+
 @app.route('/api/autoclean/<fileId>', methods=['GET'])
 def AutoClean(fileId):
     query = "SELECT file FROM AnalyticaFiles WHERE file_id = %s"
@@ -72,36 +74,45 @@ def AutoClean(fileId):
     df = pai.read_csv('Media/' + query_data[0]['file']) 
     print(df)
     ai_response = df.chat(f"""You are a Data Cleaning Assistant.
-        TASK: Clean the given CSV/DataFrame and return the CLEANED DATA as raw CSV (No explanation, No charts).
-        
-        BASIC CLEANING STEPS:
-        1. Standardize Column Names:
-        - Convert all column names to lowercase.
-        - Replace spaces & special characters with underscores.
 
-        2. Remove Duplicates:
-        - Drop fully duplicate rows.
+TASK: Clean the given CSV/DataFrame and return the CLEANED DATA as raw CSV (No explanation, No charts).
 
-        3. Handle Missing Values:
-        - Drop columns with >50% missing values.
-        - Fill nulls:
-        - Numerical Columns → Mean or Median.
-        - Categorical Columns → Mode.
-        - Datetime Columns → Forward Fill → Backward Fill.
+=> First of all perform this step then go for Basic Cleaning: 
+-> Replace Dirty Values (case-insensitive) across all columns:
+  Replace these values (in any case variation like 'ERROR', 'Error', 'error', 'Unknown', 'UNKNOWN' etc.) with np.nan:
 
-        4. Convert Data Types:
-        - Convert numeric-looking strings to numbers.
-        - Convert date strings to datetime.
+BASIC CLEANING STEPS:
 
-        5. Final Step:
-        - Strip spaces from strings.
-        - Return cleaned DataFrame as raw CSV in StringResponse.""")
+1. Standardize Column Names:
+- Convert all column names to lowercase.
+- Replace spaces & special characters with underscores.
+
+2. Remove Duplicates:
+- Drop fully duplicate rows.
+
+3. Handle Missing Values:
+- Drop columns with >50% missing values.
+- Fill nulls:
+  - Numerical Columns → Mean or Median.
+  - Categorical Columns → Mode.
+  - Datetime Columns → Forward Fill → Backward Fill.
+
+4. Convert Data Types:
+- Convert numeric-looking strings to numbers.
+- Convert date strings to datetime.
+
+5. Final Step:
+- Strip spaces from strings.
+- Return cleaned DataFrame as raw CSV in StringResponse.""")
+    
     formated_response = StringIO(str(ai_response))
     cleaned_df = pd.read_csv(formated_response)
     columns = cleaned_df.columns.tolist()
     rows = cleaned_df.values.tolist()
     response = json.dumps({'columns': columns, 'rows': rows})
     return response
+
+
 
 
 if __name__ == "__main__":

@@ -111,8 +111,6 @@ def ChatWithCSV(request, id):
         return HttpResponse(f'<div class="message received">{result["response"]}</div>')
     return render(request, 'live_chat.html', {"file_id": id})
 
-
-import time
 def AutoCleaning(request, id):
     if request.method == "POST":
         return render(request, 'components/skeleton_table.html', {"id": id}) 
