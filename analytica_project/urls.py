@@ -34,4 +34,7 @@ urlpatterns = [
     path('analytic-page/<str:id>/live-chat', ChatWithCSV, name='chatwithCSV'),
     path('analytic-page/<str:id>/auto-clean', AutoCleaning, name='autoclean'),
 
+    path('analytic-page/<str:id>/undo', undo_action, name="undoAction"),
+    path('analytic-page/<str:id>/redo', redo_action, name="redoAction"),
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -26,13 +26,24 @@
         </div>
       </div>
       <div class="header-right">
-        <form method="post"
-      hx-post="{% url 'autoclean' id=file.file_id %}" 
-      hx-target=".csv-table" 
-      hx-swap="outerHTML">
-        {% csrf_token %}
-          <button type="submit">button</button>
-        </form>
+        <button class="undo-btn" hx-get="{% url 'undoAction' id=file.file_id %}" hx-trigger="click" hx-target=".csv-table" hx-swap="outerHTML"><img src="/static/images/undo.png" alt=""></button>
+        <button class="undo-btn" hx-get="{% url 'redoAction' id=file.file_id %}" hx-trigger="click" hx-target=".csv-table" hx-swap="outerHTML"><img src="/static/images/redo.png" alt=""></button>
+        <button class="rainbow-btn" onclick="showPopup()"><img src="/static/images/data-processing.gif" alt=""></button>
+        <div id="popupModal" class="modal">
+          <div class="modal-content">
+            <p>Our AI model will clean your data, but it might take a moment. Ready to proceed?</p>
+            <div class="confirm-popup">
+              <form method="POST" hx-post="{% url 'autoclean' id=file.file_id %}" 
+                    hx-target=".csv-table" 
+                    hx-swap="outerHTML">
+              {% csrf_token %}
+              <button class="cancel-btn" onclick="closePopup()" type="button">Cancel</button>
+              <button class="confirm-btn" onclick="closePopup()" type="submit">Confirm</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      
         <a class="rainbow-btn" href="{% url 'chatwithCSV' id=file.file_id %}"><img src="/static/images/pie-chart.gif"></a>
         <button class="file-btn"><span class="icon">💾</span> Save</button>
         <button class="file-btn"><span class="icon">🖨️</span> Print</button>
@@ -61,7 +72,9 @@
                     <div class="dropdown-submenu">
                       <button
                         hx-get="{% url 'dropna' id=file.file_id colName=col %}"
-                        hx-target="body"
+                        hx-trigger="click"
+                        hx-target=".csv-table"
+                        hx-swap="outerHTML"
                       >
                         Drop NaN
                       </button>
@@ -70,13 +83,17 @@
                         <div class="dropdown-submenu-menu">
                           <button
                             hx-get="{% url 'fillna' id=file.file_id colName=col method='ffill' %}"
-                            hx-target="body"
+                            hx-trigger="click"
+                            hx-target=".csv-table"
+                            hx-swap="outerHTML"
                           >
                             Using F-fill()
                           </button>
                           <button
                             hx-get="{% url 'fillna' id=file.file_id colName=col method='bfill' %}"
-                            hx-target="body"
+                            hx-trigger="click"
+                            hx-target=".csv-table"
+                            hx-swap="outerHTML"
                           >
                             Using B-fill()
                           </button>
@@ -85,19 +102,25 @@
                             <div class="dropdown-submenu-menu">
                               <button
                                 hx-get="{% url 'fillna' id=file.file_id colName=col method='mean' %}"
-                                hx-target="body"
+                                hx-trigger="click"
+                                hx-target=".csv-table"
+                                hx-swap="outerHTML"
                               >
                                 Mean
                               </button>
                               <button
                                 hx-get="{% url 'fillna' id=file.file_id colName=col method='median' %}"
-                                hx-target="body"
+                                hx-trigger="click"
+                                hx-target=".csv-table"
+                                hx-swap="outerHTML"
                               >
                                 Median
                               </button>
                               <button
                                 hx-get="{% url 'fillna' id=file.file_id colName=col method='mode' %}"
-                                hx-target="body"
+                                hx-trigger="click"
+                                hx-target=".csv-table"
+                                hx-swap="outerHTML"
                               >
                                 Mode
                               </button>
@@ -160,6 +183,25 @@
       </div>
     </div>
     <script>
+      function showPopup() {
+        const modal = document.getElementById('popupModal');
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('active'), 10);
+      }
+
+      function closePopup() {
+          const modal = document.getElementById('popupModal');
+          modal.classList.remove('active');
+          setTimeout(() => modal.style.display = 'none', 300);
+      }
+
+      window.onclick = function(event) {
+        const modal = document.getElementById('popupModal');
+        if (event.target === modal) {
+            closePopup();
+        }
+      }
+
       document.addEventListener("DOMContentLoaded", function () {
         initializeTerminal();
     

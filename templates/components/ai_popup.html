@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popup Form</title>
+    <style>
+        /* Modal background */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Modal content */
+        .modal-content {
+            background-color: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Message styling */
+        .modal-content p {
+            margin: 0 0 24px;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #2d3748;
+        }
+
+        /* Button container */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        /* Button styling */
+        .modal-content button {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .modal-content button:active {
+            transform: scale(0.98);
+        }
+
+        .confirm-btn {
+            background-color: #48bb78;
+            color: white;
+        }
+
+        .confirm-btn:hover {
+            background-color: #38a169;
+        }
+
+        .cancel-btn {
+            background-color: #f56565;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background-color: #e53e3e;
+        }
+    </style>
+</head>
+<body>
+    <!-- Button to trigger the popup -->
+    <button onclick="showPopup()">Show Popup</button>
+
+    <!-- Modal -->
+    <div id="popupModal" class="modal">
+        <div class="modal-content">
+            <p>Our AI model will clean your data, but it might take a moment. Ready to proceed?</p>
+            <div class="button-group">
+                <form method="POST">
+                    <button class="cancel-btn" onclick="closePopup()">Cancel</button>
+                    <button class="confirm-btn" type="submit">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show the popup
+        function showPopup() {
+            const modal = document.getElementById('popupModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+        }
+
+        // Close the popup
+        function closePopup() {
+            const modal = document.getElementById('popupModal');
+            modal.classList.remove('active');
+            setTimeout(() => modal.style.display = 'none', 300);
+        }
+
+        // Handle confirm action
+        function confirmAction() {
+            alert('Data cleaning process started!');
+            closePopup();
+            // Add your logic for data cleaning here
+        }
+
+        // Close popup when clicking outside the modal content
+        window.onclick = function(event) {
+            const modal = document.getElementById('popupModal');
+            if (event.target === modal) {
+                closePopup();
+            }
+        }
+    </script>
+</body>
+</html>

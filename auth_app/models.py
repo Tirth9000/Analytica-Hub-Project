@@ -2,6 +2,19 @@ from django.db import models
 from django.contrib.auth.hashers import make_password
 
 # Create your models here.      
+class UserModel(models.Model):
+    user_id = models.CharField(primary_key=True, max_length=10)
+    email = models.EmailField(max_length=100)
+    password = models.CharField(max_length=20)
+    
+    def __str__(self):
+        return self.user_id
+
+        
+def set_password(raw_password):
+    return make_password(raw_password)
+
+
 def CheckPassword(password):
     special_char = ['/', '[', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', ',', '.', '?', ':', '{', '}', '|', '<', '>', ']']
     if len(password) < 8:

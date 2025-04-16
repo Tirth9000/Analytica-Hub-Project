@@ -72,7 +72,6 @@ def AutoClean(fileId):
     query = "SELECT file FROM AnalyticaFiles WHERE file_id = %s"
     query_data = execute_query(query, [fileId])
     df = pai.read_csv('Media/' + query_data[0]['file']) 
-    print(df)
     ai_response = df.chat(f"""You are a Data Cleaning Assistant.
 
 TASK: Clean the given CSV/DataFrame and return the CLEANED DATA as raw CSV (No explanation, No charts).

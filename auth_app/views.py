@@ -14,20 +14,24 @@ from .tasks import *
 # Create your views here.
 def UserRegister(request):
     if request.method == 'POST':
-        if UserAuth.objects.filter(email=request.POST.get('email')):
-            return render(request, 'register.html', {'alert' : True})
+        if UserModel.objects.filter(email=request.POST.get('email')):
+            return render(request, 'register.html', {'user_exist' : True})
         else:
-            userpassword = request.POST.get('password')
-            if CheckPassword(userpassword):
+            password = request.POST.get('password')
+            if CheckPassword(password):
                 return render(request, 'register.html', {'error': True}) 
             else:
-                newuser = UserAuth.objects.create(
-                    email = request.POST.get('email'),
-                    name = request.POST.get('name'),
-                    message = request.POST.get('message')
+                email = request.POST.get('email')
+                user_id = email[:4] + random.randint(10,99)
+                user_ids = UserModel.objects.all()
+                while user_id in (user_ids.user_id):
+                    user_id = email[:4] + random.randint(10, 99)
+                newuser = UserModel.objects.create(
+                    user_id = user_id,
+                    email = email
                 )
-                newuser.password = set_password(userpassword)
-                ConfirmationMail.delay(newuser.name, newuser.email)     # Celery applied
+                newuser.password = set_password(password)
+                ConfirmationMail.delay(newuser.user_id, newuser.email)     # Celery applied
                 newuser.save()
                 return redirect('login')
     else:
@@ -63,7 +67,7 @@ def UserLogin(request):
 @never_cache
 def UserHome(request):
     useremail = request.session.get('user')
-    user = UserAuth.objects.filter(email = useremail)
+    user = UserModel.objects.filter(email = useremail)
     return render(request, 'home.html', {'user': user[0]})
 
 
@@ -72,7 +76,7 @@ def ForgetPassword(request):
     if request.method == 'POST':
         if 'email' in request.POST:
             email = request.POST.get('email')
-            user = UserAuth.objects.filter(email=email)
+            user = UserModel.objects.filter(email=email)
 
             if user:
                 request.session['user_email'] = email

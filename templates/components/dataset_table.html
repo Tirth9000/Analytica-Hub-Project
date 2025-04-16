@@ -18,7 +18,9 @@
             <div class="dropdown-submenu">
             <button
                 hx-get="{% url 'dropna' id=file_id colName=col %}"
-                hx-target="body"
+                hx-trigger="click"
+                hx-target=".csv-table"
+                hx-swap="outerHTML"
             >
                 Drop NaN
             </button>
@@ -27,13 +29,17 @@
                 <div class="dropdown-submenu-menu">
                 <button
                     hx-get="{% url 'fillna' id=file_id colName=col method='ffill' %}"
-                    hx-target="body"
+                    hx-trigger="click"
+                    hx-target=".csv-table"
+                    hx-swap="outerHTML"
                 >
                     Using F-fill()
                 </button>
                 <button
                     hx-get="{% url 'fillna' id=file_id colName=col method='bfill' %}"
-                    hx-target="body"
+                    hx-trigger="click"
+                    hx-target=".csv-table"
+                    hx-swap="outerHTML"
                 >
                     Using B-fill()
                 </button>
@@ -42,19 +48,25 @@
                     <div class="dropdown-submenu-menu">
                     <button
                         hx-get="{% url 'fillna' id=file_id colName=col method='mean' %}"
-                        hx-target="body"
+                        hx-trigger="click"
+                        hx-target=".csv-table"
+                        hx-swap="outerHTML"
                     >
                         Mean
                     </button>
                     <button
                         hx-get="{% url 'fillna' id=file_id colName=col method='median' %}"
-                        hx-target="body"
+                        hx-trigger="click"
+                        hx-target=".csv-table"
+                        hx-swap="outerHTML"
                     >
                         Median
                     </button>
                     <button
                         hx-get="{% url 'fillna' id=file_id colName=col method='mode' %}"
-                        hx-target="body"
+                        hx-trigger="click"
+                        hx-target=".csv-table"
+                        hx-swap="outerHTML"
                     >
                         Mode
                     </button>
