@@ -62,8 +62,17 @@ def Details(request, id, colName):
         df = pd.DataFrame(rows, columns=columns)
     columns = list(df.describe())
     describe = df.describe().to_dict()
-    nullcount = df[colName].isnull().sum()
-    return render(request, 'components/details.html', {'describe': describe, 'columns': columns, 'nullCount': nullcount})
+    nullcount = df.isnull().sum().sum()
+    emptycount = (df == '').sum().sum()
+    duplicatecount = df.duplicated().sum()
+    uniquecount = df.nunique().sum()
+    return render(request, 'components/details.html', {'describe': describe, 
+               'columns': columns, 
+               'nullcount': nullcount, 
+               'emptycount': emptycount, 
+               'duplicatecount': duplicatecount, 
+               'uniquecount': uniquecount
+               })
 
 
 def DropNaN(request, id, colName):
@@ -175,8 +184,6 @@ def save_changes(request, id):
             updated_df = pd.DataFrame(rows, columns=columns)
         updated_df.to_csv(f"{fileObj.file}.csv", index=False)
     return HttpResponse()
-
-
 
 def undo_action(request, id):
     session_id = get_session_id(request)

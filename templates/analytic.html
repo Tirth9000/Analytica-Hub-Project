@@ -2,17 +2,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Google Docs Styled Page with Advanced Dropdowns</title>
     <script src="https://unpkg.com/htmx.org"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/analytic.css" />
   </head>
-  <body>
+  <body> 
     <div class="header">
       <div class="header-left">
-        <img src="/static/images/Analytica_Hub.jpeg" class="header-logo" />
+        <a href="{% url 'landing_page' %}"><img src="/static/images/Analytica_Hub.jpeg" class="header-logo"/></a>
         <div
           name="fileName"
           class="file-name"
@@ -20,8 +20,7 @@
           hx-get="{% url 'rename_file' id=file.file_id %}"
           hx-trigger="blur delay:500ms"
           onblur="this.setAttribute('hx-vals', JSON.stringify({new_name: this.innerText}))"
-          hx-swap="none"
-        >
+          hx-swap="none">
           {{file.file_name|upper}}
         </div>
       </div>
@@ -45,7 +44,7 @@
         </div>
       
         <a class="rainbow-btn" href="{% url 'chatwithCSV' id=file.file_id %}"><img src="/static/images/pie-chart.gif"></a>
-        <a hx-swap=none href="{% url 'save' id=file.file_id %}"><button class="file-btn"><span class="icon">💾</span> Save</button></a>
+        <a hx-get="{% url 'save' id=file.file_id %}" hx-swap="none"><button class="file-btn"><span class="icon">💾</span> Save</button></a>
       </div>
     </div>
     <div class="container"></div>
@@ -63,8 +62,7 @@
                     <button
                       hx-get="{% url 'details' id=file.file_id colName=col %}"
                       hx-target=".container"
-                      hx-swap="innerHTML"
-                    >
+                      hx-swap="innerHTML">
                       details
                     </button>
                     <div class="dropdown-submenu">
@@ -72,8 +70,7 @@
                         hx-get="{% url 'dropna' id=file.file_id colName=col %}"
                         hx-trigger="click"
                         hx-target=".csv-table"
-                        hx-swap="outerHTML"
-                      >
+                        hx-swap="outerHTML">
                         Drop NaN
                       </button>
                       <div class="dropdown-submenu">
@@ -83,16 +80,14 @@
                             hx-get="{% url 'fillna' id=file.file_id colName=col method='ffill' %}"
                             hx-trigger="click"
                             hx-target=".csv-table"
-                            hx-swap="outerHTML"
-                          >
+                            hx-swap="outerHTML">
                             Using F-fill()
                           </button>
                           <button
                             hx-get="{% url 'fillna' id=file.file_id colName=col method='bfill' %}"
                             hx-trigger="click"
                             hx-target=".csv-table"
-                            hx-swap="outerHTML"
-                          >
+                            hx-swap="outerHTML">
                             Using B-fill()
                           </button>
                           <div class="dropdown-submenu">
@@ -102,24 +97,21 @@
                                 hx-get="{% url 'fillna' id=file.file_id colName=col method='mean' %}"
                                 hx-trigger="click"
                                 hx-target=".csv-table"
-                                hx-swap="outerHTML"
-                              >
+                                hx-swap="outerHTML">
                                 Mean
                               </button>
                               <button
                                 hx-get="{% url 'fillna' id=file.file_id colName=col method='median' %}"
                                 hx-trigger="click"
                                 hx-target=".csv-table"
-                                hx-swap="outerHTML"
-                              >
+                                hx-swap="outerHTML">
                                 Median
                               </button>
                               <button
                                 hx-get="{% url 'fillna' id=file.file_id colName=col method='mode' %}"
                                 hx-trigger="click"
                                 hx-target=".csv-table"
-                                hx-swap="outerHTML"
-                              >
+                                hx-swap="outerHTML">
                                 Mode
                               </button>
                             </div>
@@ -206,7 +198,7 @@
         });
       });
     
-    function initializeTerminal() {
+      function initializeTerminal() {
         const terminal = document.getElementById("terminal");
         const dragHandle = document.getElementById("drag-handle");
         let isResizing = false;

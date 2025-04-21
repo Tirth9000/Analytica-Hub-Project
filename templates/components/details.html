@@ -65,8 +65,24 @@
           </tbody>
         </table>
       </div>
-      <div class="isNull">
-        {{nullCount}}
+
+      <div class="nan-stats-box">
+        <div class="stat-box">
+          <p class="stat-title">NaN Count</p>
+          <p class="stat-value">{{nullcount}}</p>
+        </div>
+        <div class="stat-box">
+          <p class="stat-title">Duplicate Rows</p>
+          <p class="stat-value">{{duplicatecount}}</p>
+        </div>
+        <div class="stat-box">
+          <p class="stat-title">Empty Cells</p>
+          <p class="stat-value">{{emptycount}}</p>
+        </div>
+        <div class="stat-box">
+          <p class="stat-title">Unique Rows</p>
+          <p class="stat-value">{{uniquecount}}</p>
+        </div>
       </div>
     </div>
   </div>
