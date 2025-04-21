@@ -1,7 +1,5 @@
 import redis
-import pickle, json
-import pandas as pd
-from django.conf import settings
+import json
 
 redis_client = redis.StrictRedis(
     host='redis',
@@ -9,15 +7,10 @@ redis_client = redis.StrictRedis(
     db=1
 )
 
-def store_dataframe_in_redis(df: pd.DataFrame, key: str):
-    df_pickle = pickle.dumps(df)
-    redis_client.set(key, df_pickle)
-
-def get_dataframe_from_redis_pickle(key: str) -> pd.DataFrame:
-    df_pickle = redis_client.get(key)
-    if df_pickle:
-        return pickle.loads(df_pickle)
-    return None
+def get_session_id(request):
+    if not request.session.session_key:
+        request.session.create()
+    return request.session.session_key
 
 def get_queue_key(session_id):
     return f"data_queue_{session_id}"

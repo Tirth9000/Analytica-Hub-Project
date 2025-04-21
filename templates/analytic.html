@@ -45,9 +45,7 @@
         </div>
       
         <a class="rainbow-btn" href="{% url 'chatwithCSV' id=file.file_id %}"><img src="/static/images/pie-chart.gif"></a>
-        <button class="file-btn"><span class="icon">💾</span> Save</button>
-        <button class="file-btn"><span class="icon">🖨️</span> Print</button>
-        <button class="file-btn"><span class="icon">🔗</span> Share</button>
+        <a hx-swap=none href="{% url 'save' id=file.file_id %}"><button class="file-btn"><span class="icon">💾</span> Save</button></a>
       </div>
     </div>
     <div class="container"></div>
@@ -148,8 +146,6 @@
       </div>
     </div>
 
-
-
     <div class="terminal-container">
       <div
         id="toggleTerminal"
@@ -175,7 +171,7 @@
             </div>
             <form class="code-form" hx-post="{% url 'codespace' id=file.file_id%}" hx-trigger="submit" hx-target=".code-output" hx-swap="innerHTML">
               {% csrf_token %}
-              <textarea name="code" class="code-input" placeholder="Write your code here..." oninput="adjustHeight(this)"></textarea>
+              <textarea name="code" class="code-input" placeholder="Assume 'df' as the dataframe variable." oninput="adjustHeight(this)"></textarea>
             </form>
             <div class="code-output">Output will appear here...</div>
           </div>
@@ -253,28 +249,13 @@
             document.removeEventListener("mousemove", smoothResize);
             document.removeEventListener("mouseup", stopResize);
         }
-
       }
 
       function addCodeNode() {
         const container = document.getElementById("code-container");
-        const newNode = document.createElement("div");
-        newNode.classList.add("code-node");
-        newNode.innerHTML = `
-            <div class="code-header">
-              <div class="button-group">
-                <button class="add-node-btn" onclick="addCodeNode()">➕</button>
-                <button class="run-btn" type="submit" hx-on:click="document.querySelector('.code-form').requestSubmit();">▶</button>
-                <button class="extra-btn">⚙️</button>
-              </div>
-            </div>
-            <form class="code-form" hx-post="{% url 'codespace' id=file.file_id %}" hx-trigger="submit" hx-target=".code-output" hx-swap="innerHTML">
-              {% csrf_token %}
-              <textarea name="code" class="code-input" placeholder="Write your code here..." oninput="adjustHeight(this)"></textarea>
-            </form>
-            <div class="code-output">Output will appear here...</div>
-        `;
-        container.appendChild(newNode);
+        const template = document.getElementById("code-node-template");
+        const clone = template.content.cloneNode(true);
+        container.appendChild(clone);
         container.scrollTop = container.scrollHeight;
       }
 

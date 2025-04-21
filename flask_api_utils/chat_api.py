@@ -7,6 +7,14 @@ import mysql.connector
 import json, shutil
 from io import StringIO
 
+import sys
+import os
+
+# Step 1: Add the parent directory (project_root) to sys.path
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
+from analytica_app.redis_utils import get_current_node, get_session_id
+
 pai.api_key.set("PAI-4e571b7d-528f-4954-927b-3ee59683b9ce")
 
 app = Flask(__name__)
@@ -47,11 +55,14 @@ def FileLoader():
 
 @app.route('/chat-response', methods=['GET', 'POST'])
 def ChatResponse():
-    file_address = session.get('file_address')
-    df = pai.read_csv('Media/'+file_address)
-    data = request.json
+    client_data = request.json
+    data = get_current_node(client_data["session_id"])
     if data:
-        gen_response = df.chat(data+" And Provide the response as a single-line string statement instead of a structured format only. If generating plot, make proper naming with proper spacing.")
+        columns = data["column"]
+        rows = data["row"]
+        df = pai.DataFrame(rows, columns=columns)
+    if client_data:
+        gen_response = df.chat(client_data["client_msg"] + "And Provide the response as a single-line string statement instead of a structured format only. If generating plot, make proper naming with proper spacing.")
         if str(type(gen_response)) == "<class 'pandasai.core.response.chart.ChartResponse'>":
             img_name = str(gen_response).replace('exports/charts/', "")
             img_path = f'Media/plot_img/{img_name}'
@@ -67,11 +78,16 @@ def ChatResponse():
 
 
 
-@app.route('/api/autoclean/<fileId>', methods=['GET'])
-def AutoClean(fileId):
-    query = "SELECT file FROM AnalyticaFiles WHERE file_id = %s"
-    query_data = execute_query(query, [fileId])
-    df = pai.read_csv('Media/' + query_data[0]['file']) 
+@app.route('/api/autoclean/<session_id>', methods=['POST', 'GET'])
+def AutoClean(session_id):
+    # query = "SELECT file FROM AnalyticaFiles WHERE file_id = %s"
+    # query_data = execute_query(query, [fileId])
+    data = get_current_node(session_id)
+    if data:
+        columns = data["column"]
+        rows = data["row"]
+        df = pai.DataFrame(rows, columns=columns)
+    # df = pai.read_csv('Media/' + query_data[0]['file']) 
     ai_response = df.chat(f"""You are a Data Cleaning Assistant.
 
 TASK: Clean the given CSV/DataFrame and return the CLEANED DATA as raw CSV (No explanation, No charts).

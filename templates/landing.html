@@ -13,7 +13,7 @@
     <ul class="navbar-menu">
       <li><a href="#home" class="nav-link">Home</a></li>
       <li><a href="#about" class="nav-link">About</a></li>
-      <li><a href="#how-to-use" class="nav-link">How to Use</a></li>
+      <li><a href="#how-to-use-section" class="nav-link">How to Use</a></li>
       <li><a href="#contact" class="nav-link">Contact</a></li>
     </ul>
     <div class="navbar-buttons">
@@ -25,7 +25,6 @@
   <section id="home" class="section">
     <h1>Simplify, Analyze, and Discover Insights <br> 
       Like Never Before</h1>
-      <br>
     <p>A cutting-edge web application designed to streamline your data cleaning, encoding, and visualization processes. <br>
       Transform your datasets into actionable insights through intuitive graphs and seamless navigation, <br>
       empowering you to make informed decisions with confidence.</p>
@@ -39,18 +38,100 @@
   </section>
 
   <section id="about" class="section">
-    <h2>How does it works ?</h2>
-    <p>Here's some information about us.</p>
+    <div class="info-row">
+      <div class="info-text">
+        <h2>Automatic Data Cleaning</h2>
+        <p>No more messy data! Our tool automatically detects and fixes inconsistencies to prepare your dataset for smooth analysis.</p>
+      </div>
+      <div class="info-image">
+        <img src="/static/videos/autoclean.gif" alt="Image 1"/>
+      </div>
+    </div>
+  
+    <!-- Row 2 -->
+    <div class="info-row reverse">
+      <div class="info-text">
+        <h2>Chat with CSV</h2>
+        <p>Talk to your data like you would to a person. Ask questions in plain English and get instant insights from your CSV files.</p>
+      </div>
+      <div class="info-image">
+        <img src="/static/videos/ChatwithCsv.gif" alt="Image 2" />
+      </div>
+    </div>
+  
+    <!-- Row 3 -->
+    <div class="info-row">
+      <div class="info-text">
+        <h2>Python Code Space</h2>
+        <p>Write and run Python code directly in your browser. Perfect for quick testing, exploring data, or running custom logic on the fly.</p>
+      </div>
+      <div class="info-image">
+        <img src="/static/videos/pythoncodespace.gif" alt="Image 3" />
+      </div>
+    </div>
   </section>
 
-  <section id="how-to-use" class="section">
-    <h2>How to Use</h2>
-    <p>Instructions on how to use our product or service.</p>
+  <section id="how-to-use-section" class="section">
+    <h1>Get started in a minute</h1>
+
+    <div class="how-step">
+      <div class="step-image">
+        <img src="/static/images/login.jpg" alt="Login" />
+      </div>
+      <div class="step-text">
+        <h3>1. Login or Sign Up</h3>
+        <p>Create a new account or log in to your existing one to securely access the platform’s features and save your activity for future sessions.</p>
+      </div>
+    </div>
+  
+    <div class="how-step reverse">
+      <div class="step-text">
+        <h3>2. Upload Your Dataset (CSV Format)</h3>
+        <p>Easily upload your dataset in CSV format. This allows the system to process and prepare your data for intelligent interaction.</p>
+      </div>
+      <div class="step-image">
+        <img src="/static/images/uploaddoc.jpg" alt="Upload CSV" />
+      </div>
+    </div>
+  
+    <div class="how-step">
+      <div class="step-image">
+        <img src="/static/images/autocleaning.jpg" alt="Data Cleaning" />
+      </div>
+      <div class="step-text">
+        <h3>3. Automatic Data Cleaning</h3>
+        <p>To ensure the best experience, your dataset undergoes automatic cleaning. This step helps eliminate errors, handle missing values, and structure the data properly.</p>
+      </div>
+    </div>
+  
+    <div class="how-step reverse">
+      <div class="step-text">
+        <h3>4. Chat with Your CSV</h3>
+        <p>Once your dataset is cleaned, you can start asking questions about your data using natural language. Get instant, meaningful insights powered by advanced AI—no coding needed.</p>
+      </div>
+      <div class="step-image">
+        <img src="/static/images/chatbot.jpg" alt="Chat with CSV" />
+      </div>
+    </div>
   </section>
+
 
   <section id="contact" class="section">
-    <h2>Contact Us</h2>
-    <p>Get in touch with us here.</p>
+    <div class="contact-container">
+      <div class="contact-form-box">
+        <h2>Contact Us</h2>
+        <p>Have a suggestion or message? We'd love to hear from you!</p>
+        <form method="POST" action="/send-message" class="contact-form">
+          <input type="email" name="email" placeholder="Your Email" required />
+          <textarea name="message" placeholder="Your Message..." required></textarea>
+          <button type="submit">Send Message</button>
+        </form>
+      </div>
+  
+      <div class="contact-image-box">
+        <img src="/static/images/contactus.jpg" alt="Contact Illustration" />
+      </div>
+    </div>
   </section>
 
   <script src="/static/landing.js"></script>

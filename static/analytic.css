@@ -220,7 +220,7 @@ body {
 }
 
 .table-wrapper {
-  max-height: 650px; 
+  max-height: 81vh; 
   overflow: auto;
 }
 

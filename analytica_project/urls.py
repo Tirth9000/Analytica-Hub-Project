@@ -36,5 +36,7 @@ urlpatterns = [
 
     path('analytic-page/<str:id>/undo', undo_action, name="undoAction"),
     path('analytic-page/<str:id>/redo', redo_action, name="redoAction"),
+
+    path('analytic-page/<str:id>/save', save_changes, name="save"),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
