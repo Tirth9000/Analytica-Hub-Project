@@ -4,8 +4,10 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Sign Up</title>
+        <title>Analytica-Hub</title>
+        <script src="https://unpkg.com/htmx.org"></script>
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="/static/signup.css">
         <style>
             body {
                 background: linear-gradient(to bottom right, #e0e7ff, #f3e8ff);
@@ -18,43 +20,27 @@
         </style>
     </head>
     <body class="min-h-screen flex items-center justify-center p-4">
-        <div class="form-container max-w-md w-full rounded-2xl shadow-lg p-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Sign Up</h2>
-            <form method="POST" action="{% url 'signup' %}" class="space-y-6">
-                {% csrf_token %}
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-                        placeholder="Enter your email"
-                    >
+        <div class="signup-wrapper">
+            <div class="signup-card">
+              <h2 class="signup-title">Create Account</h2>
+          
+              <!-- Email + Send OTP -->
+              <form class="form email-form">
+                <div class="merged-input">
+                  <input type="email" placeholder="Email address" required />
+                  <button type="submit">Send OTP</button>
                 </div>
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        required
-                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-                        placeholder="Create a password"
-                    >
+              </form>
+          
+              <!-- OTP + Verify -->
+              <form class="form otp-form">
+                <div class="merged-input">
+                  <input type="text" placeholder="Enter OTP" maxlength="6" required />
+                  <button type="submit">Verify</button>
                 </div>
-                <button
-                    type="submit"
-                    class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
-                >
-                    Sign Up
-                </button>
-            </form>
-            <p class="mt-4 text-center text-sm text-gray-600">
-                Already have an account? <a href="{% url 'login' %}" class="text-indigo-600 hover:underline">Login</a>
-            </p>
-        </div>
+              </form>
+            </div>
+          </div>
     </body>
     </html>
 

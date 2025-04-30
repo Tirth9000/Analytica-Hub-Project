@@ -3,17 +3,16 @@ from flask_cors import CORS
 import pandasai as pai
 import os, pandas as pd
 from decouple import config
-import mysql.connector
+# import mysql.connector
 import json, shutil
 from io import StringIO
 
 import sys
 import os
 
-# Step 1: Add the parent directory (project_root) to sys.path
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
-from analytica_app.redis_utils import get_current_node, get_session_id
+from utility.redis_utils import get_current_node
 
 pai.api_key.set("PAI-4e571b7d-528f-4954-927b-3ee59683b9ce")
 
@@ -36,30 +35,30 @@ DB_config = {
     "database": config("DB_NAME")
 }
 
-def execute_query(query, params=None):
-    connection = mysql.connector.connect(**DB_config)
-    cursor = connection.cursor(dictionary=True)
-    cursor.execute(query, params or ())
-    result = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return result
+# def execute_query(query, params=None):
+#     connection = mysql.connector.connect(**DB_config)
+#     cursor = connection.cursor(dictionary=True)
+#     cursor.execute(query, params or ())
+#     result = cursor.fetchall()
+#     cursor.close()
+#     connection.close()
+#     return result
 
-@app.route('/upload-file', methods=['GET', 'POST'])
-def FileLoader(): 
-    data = request.json
-    query = "SELECT file FROM AnalyticaFiles WHERE file_id = %s"
-    query_data = execute_query(query, [data['id']])
-    session['file_address'] = query_data[0]["file"]
-    return json.dumps({'message': "session stored successfully!", "status": 200})
+# @app.route('/upload-file', methods=['GET', 'POST'])
+# def FileLoader(): 
+#     data = request.json
+#     query = "SELECT file FROM AnalyticaFiles WHERE file_id = %s"
+#     query_data = execute_query(query, [data['id']])
+#     session['file_address'] = query_data[0]["file"]
+#     return json.dumps({'message': "session stored successfully!", "status": 200})
 
 @app.route('/chat-response', methods=['GET', 'POST'])
 def ChatResponse():
     client_data = request.json
-    data = get_current_node(client_data["session_id"])
+    data = get_current_node(client_data["id"])
     if data:
-        columns = data["column"]
-        rows = data["row"]
+        columns = data["columns"]
+        rows = data["rows"]
         df = pai.DataFrame(rows, columns=columns)
     if client_data:
         gen_response = df.chat(client_data["client_msg"] + "And Provide the response as a single-line string statement instead of a structured format only. If generating plot, make proper naming with proper spacing.")
@@ -78,14 +77,14 @@ def ChatResponse():
 
 
 
-@app.route('/api/autoclean/<session_id>', methods=['POST', 'GET'])
-def AutoClean(session_id):
+@app.route('/api/autoclean/<id>', methods=['POST', 'GET'])
+def AutoClean(id):
     # query = "SELECT file FROM AnalyticaFiles WHERE file_id = %s"
     # query_data = execute_query(query, [fileId])
-    data = get_current_node(session_id)
+    data = get_current_node(id)
     if data:
-        columns = data["column"]
-        rows = data["row"]
+        columns = data["columns"]
+        rows = data["rows"]
         df = pai.DataFrame(rows, columns=columns)
     # df = pai.read_csv('Media/' + query_data[0]['file']) 
     ai_response = df.chat(f"""You are a Data Cleaning Assistant.
@@ -102,8 +101,9 @@ BASIC CLEANING STEPS:
 - Convert all column names to lowercase.
 - Replace spaces & special characters with underscores.
 
-2. Remove Duplicates:
-- Drop fully duplicate rows.
+2. Convert Data Types:
+- Convert numeric-looking strings to numbers.
+- Convert date strings to datetime.
 
 3. Handle Missing Values:
 - Drop columns with >50% missing values.
@@ -112,13 +112,13 @@ BASIC CLEANING STEPS:
   - Categorical Columns → Mode.
   - Datetime Columns → Forward Fill → Backward Fill.
 
-4. Convert Data Types:
-- Convert numeric-looking strings to numbers.
-- Convert date strings to datetime.
+4. Remove Duplicates:
+- Drop fully duplicate rows.
 
 5. Final Step:
 - Strip spaces from strings.
-- Return cleaned DataFrame as raw CSV in StringResponse.""")
+- STRICKLY - Beforing responding check all above steps properly even after performing on the dataset.
+- Return cleaned DataFrame as raw CSV in StringResponse, but don't create new file strickly.""")
     
     formated_response = StringIO(str(ai_response))
     cleaned_df = pd.read_csv(formated_response)

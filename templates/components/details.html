@@ -1,7 +1,7 @@
 {% load custom_filters %}
 <div class="popup-overlay">
     <div class="popup">
-      <button class="close-btn" onclick="closePopup()">×</button>
+      <button class="close-btn" onclick="closedescPopup()">×</button>
       <h2>Details</h2>
       <div class="table-container">
         <table class="modern-table">
@@ -65,7 +65,7 @@
           </tbody>
         </table>
       </div>
-
+      
       <div class="nan-stats-box">
         <div class="stat-box">
           <p class="stat-title">NaN Count</p>
@@ -88,7 +88,7 @@
   </div>
 
 <script>
-    function closePopup() {
+    function closedescPopup() {
         const popupOverlay = document.querySelector('.popup-overlay');
         popupOverlay.style.display = 'none';
       }

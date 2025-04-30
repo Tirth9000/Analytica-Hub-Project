@@ -17,16 +17,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from analytica_app.views import *
+from auth_app.views import *
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPage, name='landing_page'),
+
+    path('analytica-hub/login', UserLogin, name="login"),
+    path('analytica-hub/signup', UserRegister, name="signup"),
+
     path('upload-file/', UploadFile, name='upload_file'),
     path('analytic-page/<str:id>', AnalyticPage, name='analytic_page'),
     path('analytic-page/<str:id>/rename-file', RenameFile, name='rename_file'),
     path('analytic-page/<str:id>/details/<str:colName>', Details, name='details'),
+    path('analytic-page/<str:id>/datails/<str:colName>/drop-column', DropColumn, name="drop_column"),
     path('analytic-page/<str:id>/detials/<str:colName>/drop-nan', DropNaN, name='dropna'),
     path('analytic-page/<str:id>/detials/<str:colName>/fill-nan/<str:method>', FillNaN, name='fillna'),
 

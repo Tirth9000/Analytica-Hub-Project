@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponseRedirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth import authenticate
 from django.views.decorators.cache import never_cache
 from django.core.mail import send_mail 
@@ -6,65 +6,30 @@ import random
 import threading
 from .middlewares import *
 from templates import *
-from .forms import *
 from .models import *
 from .tasks import *
 
 
 # Create your views here.
 def UserRegister(request):
-    if request.method == 'POST':
-        if UserModel.objects.filter(email=request.POST.get('email')):
-            return render(request, 'register.html', {'user_exist' : True})
-        else:
-            password = request.POST.get('password')
-            if CheckPassword(password):
-                return render(request, 'register.html', {'error': True}) 
-            else:
-                email = request.POST.get('email')
-                user_id = email[:4] + random.randint(10,99)
-                user_ids = UserModel.objects.all()
-                while user_id in (user_ids.user_id):
-                    user_id = email[:4] + random.randint(10, 99)
-                newuser = UserModel.objects.create(
-                    user_id = user_id,
-                    email = email
-                )
-                newuser.password = set_password(password)
-                ConfirmationMail.delay(newuser.user_id, newuser.email)     # Celery applied
-                newuser.save()
-                return redirect('login')
-    else:
-        success_message = False
-        error_message = False
-        return render(request, 'register.html', {'success':success_message, 'error': error_message})
+    if request.method == "POST":
+        email = request.POST.get('email')
+        found_email = UserModel.objects.filter(email = email)
+        if found_email:
+            return HttpResponse()
+        
+        SendOTP(otp, email)
+    return render(request, 'signup.html')
 
 
-@user_login
-@never_cache
+# @user_login
+# @never_cache
 def UserLogin(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = authenticate(request, email=email, password=password)
-            if user is not None:
-                request.session['auth_token'] = 'login'
-                request.session['user'] = user.email
-                return redirect('home')
-            else:
-                request.session['auth_token'] = None
-                return render(request, 'login.html', {'alert': True, 'form': form})
-        else:
-            return render(request, 'login.html', {'from': form})
-    else:
-        form = LoginForm()
-        return render(request, 'login.html', {'alert': False, 'form': form})
+    return render(request, 'login.html')
 
 
-@user_logout
-@never_cache
+# @user_logout
+# @never_cache
 def UserHome(request):
     useremail = request.session.get('user')
     user = UserModel.objects.filter(email = useremail)
@@ -117,7 +82,7 @@ def ResetPassword(request):
             return render(request, 'reset.html', {'confirm_password': True})
 
         else:
-            get_user = UserAuth.objects.get(email=request.session.get('user_email'))
+            get_user = UserModel.objects.get(email=request.session.get('user_email'))
             get_user.password = set_password(password)
             get_user.save()
             request.session.pop('user_email', None)
@@ -127,7 +92,7 @@ def ResetPassword(request):
 
 def ResendOTP(request):
     email = request.session.get('user_email')
-    user = UserAuth.objects.get(email = email)
+    user = UserModel.objects.get(email = email)
     global otp
     otp = random.randint(100000, 999999)
     OTPMail.delay(otp, user.name, user.email)       # Celery applied

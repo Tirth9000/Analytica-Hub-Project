@@ -1,13 +1,7 @@
 import pandas as pd
 
-df = pd.read_csv("student_data.csv")
+df = pd.read_csv("medical_students_dataset.csv")
 
-code = """df = df.dropna(subset=["marks"])
-print(df["marks"].isnull().sum())
-"""
+rows = df.values.tolist()  
+print(len(rows))
 
-print(df["marks"].isnull().sum())
-
-exec(code)
-
-print(df["marks"].isnull().sum())

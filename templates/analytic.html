@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Google Docs Styled Page with Advanced Dropdowns</title>
+    <title>Analytica-Hub</title>
     <script src="https://unpkg.com/htmx.org"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/analytic.css" />
@@ -49,8 +49,9 @@
     </div>
     <div class="container"></div>
     <div class="csv-table-container">
+      <p class="small-modern-text">{{shape}}</p>
       <div class="table-wrapper">
-        <table class="csv-table">
+        <table id="csv-table" class="csv-table">
           <thead>
             <tr>
               {% for col in columns %}
@@ -65,13 +66,19 @@
                       hx-swap="innerHTML">
                       details
                     </button>
+                    <button
+                      hx-get="{% url 'drop_column' id=file.file_id colName=col %}"
+                      hx-target=".csv-table"
+                      hx-swap="outerHTML">
+                      drop column
+                    </button>
                     <div class="dropdown-submenu">
                       <button
                         hx-get="{% url 'dropna' id=file.file_id colName=col %}"
                         hx-trigger="click"
                         hx-target=".csv-table"
                         hx-swap="outerHTML">
-                        Drop NaN
+                        drop nan
                       </button>
                       <div class="dropdown-submenu">
                         <button>Fill NaN ▸</button>
@@ -81,14 +88,14 @@
                             hx-trigger="click"
                             hx-target=".csv-table"
                             hx-swap="outerHTML">
-                            Using F-fill()
+                            F-fill()
                           </button>
                           <button
                             hx-get="{% url 'fillna' id=file.file_id colName=col method='bfill' %}"
                             hx-trigger="click"
                             hx-target=".csv-table"
                             hx-swap="outerHTML">
-                            Using B-fill()
+                            B-fill()
                           </button>
                           <div class="dropdown-submenu">
                             <button>Descriptive Statistics ▸</button>
@@ -161,7 +168,7 @@
                 <button class="extra-btn">⚙️</button>
               </div>
             </div>
-            <form class="code-form" hx-post="{% url 'codespace' id=file.file_id%}" hx-trigger="submit" hx-target=".code-output" hx-swap="innerHTML">
+            <form class="code-form" hx-post="{% url 'codespace' id=file.file_id%}" hx-trigger="submit" hx-target=".csv-table" hx-swap="outerHTML">
               {% csrf_token %}
               <textarea name="code" class="code-input" placeholder="Assume 'df' as the dataframe variable." oninput="adjustHeight(this)"></textarea>
             </form>

@@ -97,8 +97,7 @@ body {
   background-color: #0073e6;
 }
 
-.navbar-buttons .login-btn,
-.navbar-buttons .signup-btn {
+.navbar-buttons .login-btn {
   border: none;
   padding: 8px 16px;
   cursor: pointer;
@@ -113,20 +112,11 @@ body {
   border: 1px solid #0073e6;
 }
 
-.navbar-buttons .signup-btn {
-  background-color: #0073e6;
-  color: #fff;
-  margin-left: 10px;
-}
-
 .navbar-buttons .login-btn:hover {
   background-color: #0073e6;
   color: #fff;
 }
 
-.navbar-buttons .signup-btn:hover {
-  background-color: #005bb5;
-}
 
 .section {
   padding: 100px 20px;

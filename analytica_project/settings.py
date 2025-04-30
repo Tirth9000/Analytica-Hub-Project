@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_results',
-    # 'auth_app',
+    'auth_app',
     'analytica_app',
 ]
 

@@ -1,93 +1,92 @@
 
-<table class="csv-table">
-<thead>
-    <tr>
-    {% for col in columns %}
-    <th>
-        {{col|upper}}
-        <div class="dropdown-container">
-        <button class="dropdown-btn">▼</button>
-        <div class="dropdown-menu">
-            <button
-            hx-get="{% url 'details' id=file_id colName=col %}"
-            hx-target=".container"
-            hx-swap="innerHTML"
-            >
-            details
-            </button>
-            <div class="dropdown-submenu">
-            <button
-                hx-get="{% url 'dropna' id=file_id colName=col %}"
-                hx-trigger="click"
+<table id="csv-table" class="csv-table">
+    <thead>
+      <tr>
+        {% for col in columns %}
+        <th>
+          {{col|upper}}
+          <div class="dropdown-container">
+            <button class="dropdown-btn">▼</button>
+            <div class="dropdown-menu">
+              <button
+                hx-get="{% url 'details' id=file_id colName=col %}"
+                hx-target=".container"
+                hx-swap="innerHTML">
+                details
+              </button>
+              <button
+                hx-get="{% url 'drop_column' id=file_id colName=col %}"
                 hx-target=".csv-table"
-                hx-swap="outerHTML"
-            >
-                Drop NaN
-            </button>
-            <div class="dropdown-submenu">
-                <button>Fill NaN ▸</button>
-                <div class="dropdown-submenu-menu">
+                hx-swap="outerHTML">
+                drop column
+              </button>
+              <div class="dropdown-submenu">
                 <button
-                    hx-get="{% url 'fillna' id=file_id colName=col method='ffill' %}"
-                    hx-trigger="click"
-                    hx-target=".csv-table"
-                    hx-swap="outerHTML"
-                >
-                    Using F-fill()
-                </button>
-                <button
-                    hx-get="{% url 'fillna' id=file_id colName=col method='bfill' %}"
-                    hx-trigger="click"
-                    hx-target=".csv-table"
-                    hx-swap="outerHTML"
-                >
-                    Using B-fill()
+                  hx-get="{% url 'dropna' id=file_id colName=col %}"
+                  hx-trigger="click"
+                  hx-target=".csv-table"
+                  hx-swap="outerHTML">
+                  drop nan
                 </button>
                 <div class="dropdown-submenu">
-                    <button>Descriptive Statistics ▸</button>
-                    <div class="dropdown-submenu-menu">
+                  <button>Fill NaN ▸</button>
+                  <div class="dropdown-submenu-menu">
                     <button
-                        hx-get="{% url 'fillna' id=file_id colName=col method='mean' %}"
-                        hx-trigger="click"
-                        hx-target=".csv-table"
-                        hx-swap="outerHTML"
-                    >
-                        Mean
+                      hx-get="{% url 'fillna' id=file_id colName=col method='ffill' %}"
+                      hx-trigger="click"
+                      hx-target=".csv-table"
+                      hx-swap="outerHTML">
+                      F-fill()
                     </button>
                     <button
-                        hx-get="{% url 'fillna' id=file_id colName=col method='median' %}"
-                        hx-trigger="click"
-                        hx-target=".csv-table"
-                        hx-swap="outerHTML"
-                    >
-                        Median
+                      hx-get="{% url 'fillna' id=file_id colName=col method='bfill' %}"
+                      hx-trigger="click"
+                      hx-target=".csv-table"
+                      hx-swap="outerHTML">
+                      B-fill()
                     </button>
-                    <button
-                        hx-get="{% url 'fillna' id=file_id colName=col method='mode' %}"
-                        hx-trigger="click"
-                        hx-target=".csv-table"
-                        hx-swap="outerHTML"
-                    >
-                        Mode
-                    </button>
+                    <div class="dropdown-submenu">
+                      <button>Descriptive Statistics ▸</button>
+                      <div class="dropdown-submenu-menu">
+                        <button
+                          hx-get="{% url 'fillna' id=file_id colName=col method='mean' %}"
+                          hx-trigger="click"
+                          hx-target=".csv-table"
+                          hx-swap="outerHTML">
+                          Mean
+                        </button>
+                        <button
+                          hx-get="{% url 'fillna' id=file_id colName=col method='median' %}"
+                          hx-trigger="click"
+                          hx-target=".csv-table"
+                          hx-swap="outerHTML">
+                          Median
+                        </button>
+                        <button
+                          hx-get="{% url 'fillna' id=file_id colName=col method='mode' %}"
+                          hx-trigger="click"
+                          hx-target=".csv-table"
+                          hx-swap="outerHTML">
+                          Mode
+                        </button>
+                      </div>
                     </div>
+                  </div>
                 </div>
-                </div>
+              </div>
             </div>
-            </div>
-        </div>
-        </div>
-    </th>
-    {% endfor %}
-    </tr>
-</thead>
-<tbody>
-    {% for row in rows %}
-    <tr>
-    {% for value in row %}
-    <td>{{value}}</td>
-    {% endfor %}
-    </tr>
-    {% endfor %}
-</tbody>
-</table>
+          </div>
+        </th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        {% for value in row %}
+        <td>{{value}}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>

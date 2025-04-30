@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from .forms import *
 
 
 def user_logout(request_function):

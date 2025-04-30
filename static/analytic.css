@@ -69,11 +69,6 @@ body {
   transition: opacity 5s in-out;
 }
 
-.file-name:hover::after {
-  visibility: visible; 
-  opacity: 1; 
-}
-
 .file-name:hover,
 .file-name:focus {
   padding: 3px 9px;
@@ -731,4 +726,15 @@ body {
   font-size: 1.5rem;
   color: #202124;
   font-weight: bold;
+}
+
+.small-modern-text {
+  font-size: 0.85rem;
+  color: #4a4a4a;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  line-height: 1.4;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  text-wrap: balance;
+  margin-left: 5px;
 }

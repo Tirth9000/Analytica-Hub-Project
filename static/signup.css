@@ -1,0 +1,85 @@
+/* Body Layout */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* Container Wrapper */
+  .signup-wrapper {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+  }
+  
+  /* Card Design */
+  .signup-card {
+    background: #ffffff;
+    padding: 30px 25px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .signup-card:hover {
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* Title */
+  .signup-title {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 28px;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+  
+  /* Form Container */
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+  }
+  
+  .merged-input {
+    display: flex;
+    border: 1.6px solid #d1d5db;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f9fafb;
+    transition: border-color 0.3s ease;
+  }
+  
+  .merged-input:focus-within {
+    border-color: #0078ff;
+  }
+  
+  .merged-input input {
+    flex: 1;
+    padding: 14px 16px;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    color: #111827;
+  }
+  
+  .merged-input button {
+    background: linear-gradient(to right, #0078ff, #4f46e5);
+    color: white;
+    border: none;
+    padding: 0 20px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .merged-input button:hover {
+    background: linear-gradient(to right, #005dd1, #4338ca);
+  }

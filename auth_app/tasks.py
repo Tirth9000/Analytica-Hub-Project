@@ -3,6 +3,16 @@ from django.core.mail import send_mail
 
 
 @shared_task
+def SendOTP(otp, to_email):
+    send_mail("OTP to register new user.", 
+              f""" {otp}
+              """,
+              "dummyforproject09@gmail.com",
+              [to_email],
+              fail_silently= False)
+    
+    
+@shared_task
 def ConfirmationMail(name, to_email):
     send_mail(
         "Registration Successfull!",

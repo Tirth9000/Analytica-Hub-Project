@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Landing Page</title>
+  <title>Analytica-Hub</title>
+  <script src="https://unpkg.com/htmx.org"></script>
   <link rel="stylesheet" href="/static/landing.css">
 </head>
 <body>
@@ -17,8 +18,7 @@
       <li><a href="#contact" class="nav-link">Contact</a></li>
     </ul>
     <div class="navbar-buttons">
-      <button class="login-btn">Login</button>
-      <button class="signup-btn">Sign Up</button>
+      <a href="{% url 'login' %}"><button class="login-btn">Login</button></a>
     </div>
   </nav>
 
