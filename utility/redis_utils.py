@@ -28,7 +28,6 @@ def push_data(file_id, rows, columns):
     key = get_pointer_key(file_id)
     index_value = get_index_value(file_id)
     queue_length = redis_client.llen(file_id)
-    
     if index_value < queue_length -1:
         redis_client.ltrim(file_id, 0, index_value)
 
