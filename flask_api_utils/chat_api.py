@@ -3,7 +3,6 @@ from flask_cors import CORS
 import pandasai as pai
 import os, pandas as pd
 from decouple import config
-# import mysql.connector
 import json, shutil
 from io import StringIO
 
@@ -27,30 +26,6 @@ import sys
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.DEBUG)
 
-
-DB_config = {
-    "host": config("DB_HOST"),
-    "user": config("DB_USER"),
-    "password": config("DB_PASSWORD"),
-    "database": config("DB_NAME")
-}
-
-# def execute_query(query, params=None):
-#     connection = mysql.connector.connect(**DB_config)
-#     cursor = connection.cursor(dictionary=True)
-#     cursor.execute(query, params or ())
-#     result = cursor.fetchall()
-#     cursor.close()
-#     connection.close()
-#     return result
-
-# @app.route('/upload-file', methods=['GET', 'POST'])
-# def FileLoader(): 
-#     data = request.json
-#     query = "SELECT file FROM AnalyticaFiles WHERE file_id = %s"
-#     query_data = execute_query(query, [data['id']])
-#     session['file_address'] = query_data[0]["file"]
-#     return json.dumps({'message': "session stored successfully!", "status": 200})
 
 @app.route('/chat-response', methods=['GET', 'POST'])
 def ChatResponse():
@@ -79,14 +54,11 @@ def ChatResponse():
 
 @app.route('/api/autoclean/<id>', methods=['POST', 'GET'])
 def AutoClean(id):
-    # query = "SELECT file FROM AnalyticaFiles WHERE file_id = %s"
-    # query_data = execute_query(query, [fileId])
     data = get_current_node(id)
     if data:
         columns = data["columns"]
         rows = data["rows"]
         df = pai.DataFrame(rows, columns=columns)
-    # df = pai.read_csv('Media/' + query_data[0]['file']) 
     ai_response = df.chat(f"""You are a Data Cleaning Assistant.
 
 TASK: Clean the given CSV/DataFrame and return the CLEANED DATA as raw CSV (No explanation, No charts).
@@ -119,7 +91,7 @@ BASIC CLEANING STEPS:
 - Strip spaces from strings.
 - STRICKLY - Beforing responding check all above steps properly even after performing on the dataset.
 - Return cleaned DataFrame as raw CSV in StringResponse, but don't create new file strickly.""")
-    
+
     formated_response = StringIO(str(ai_response))
     cleaned_df = pd.read_csv(formated_response)
     columns = cleaned_df.columns.tolist()

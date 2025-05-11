@@ -7,7 +7,7 @@ import threading
 from .middlewares import *
 from templates import *
 from .models import *
-from .tasks import *
+from .auth_tasks import *
 
 
 # Create your views here.

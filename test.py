@@ -1,7 +1,7 @@
-import pandas as pd
+import random, string 
 
-df = pd.read_csv("medical_students_dataset.csv")
+random_id = random.randint(1000, 9999) 
+letters = ''.join(random.choices(string.ascii_uppercase, k=2))
+new_file_id =  str(letters + str(random_id))
 
-rows = df.values.tolist()  
-print(len(rows))
-
+print(new_file_id)

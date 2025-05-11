@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, HttpResponse
-from templates import *
+from django.urls import reverse
+from .middleware import with_skeleton
 from .models import AnalyticaFiles
 from utility.redis_utils import *
-import io, sys
+from .main_tasks import *
+from templates import *
 import pandas as pd
-import requests, io, json
+import requests, io
+import io, sys
 
 # Create your views here.
 def LandingPage(request):
@@ -16,27 +19,22 @@ def AnalyticPage(request, id):
     fileObj = AnalyticaFiles.objects.get(file_id = id)
     if not check_key(id): 
         clear_all()
-    data = get_current_node(id)
-    if data:
-        columns = data["columns"]
-        rows = data["rows"]
-        df = pd.DataFrame(rows, columns=columns)
-    else:
-        df = pd.read_csv(fileObj.file)
-        columns = df.columns.tolist()
-        rows = df.values.tolist()
-        push_data(id, rows, columns)
-    if len(rows) > 10000:
-        rows = rows[:10000]
-        # fileObj.file.seek(0)
-        # df_iterator = pd.read_csv(fileObj.file, chunksize=10000)
-        # first_chunk = next(df_iterator)
-        # rows = first_chunk.values.tolist()
-        # columns = first_chunk.columns.tolist()
-    shape = df.shape
     if request.headers.get('HX-Request'):
-        return render(request, 'analytic.html', {"file": fileObj, "columns": columns, "rows": rows, 'shape': shape})
-    return render(request, 'analytic.html', {"file": fileObj, "columns": columns, "rows": rows, 'shape': shape})
+        data = get_current_node(id)
+        if data:
+            columns = data["columns"]
+            rows = data["rows"]
+            df = pd.DataFrame(rows, columns=columns)
+        else:
+            df = pd.read_csv(fileObj.file)
+            columns = df.columns.tolist()
+            rows = df.values.tolist()
+            push_data(id, rows, columns)
+        if len(rows) > 10000:
+            rows = rows[:10000]
+        shape = df.shape
+        return render(request, 'components/dataset_table.html', {"file_id": id, "columns": columns, "rows": rows, 'shape': shape})
+    return render(request, 'analytic.html', {"file": fileObj})
 
 
 def RenameFile(request, id):
@@ -47,12 +45,6 @@ def RenameFile(request, id):
             fileobj.file_name = new_file_name
             fileobj.save()
     return redirect('analytic_page', id)
-
-
-def UploadFile(request):
-    clear_all()
-    files = AnalyticaFiles.objects.all()
-    return render(request, 'upload_file.html', {"files": files})
 
 
 def Details(request, id, colName):
@@ -67,7 +59,6 @@ def Details(request, id, colName):
     emptycount = (df == '').sum().sum()
     duplicatecount = df.duplicated().sum()
     uniquecount = df.nunique().sum()
-    
     return render(request, 'components/details.html', {'describe': describe, 
                'columns': columns, 
                'nullcount': nullcount, 
@@ -76,6 +67,8 @@ def Details(request, id, colName):
                'uniquecount': uniquecount
                })
 
+
+@with_skeleton()
 def DropColumn(request, id, colName):
     data = get_current_node(id)
     if data:
@@ -88,11 +81,12 @@ def DropColumn(request, id, colName):
     push_data(id, rows, columns)
     if len(rows) > 10000:
         rows = rows[:10000]
-    return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows})
+    shape = df.shape
+    return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
 
-    
+
+@with_skeleton()    
 def DropNaN(request, id, colName):
-    fileobj = AnalyticaFiles.objects.get(file_id = id)
     data = get_current_node(id)
     if data:
         columns = data["columns"]
@@ -104,11 +98,12 @@ def DropNaN(request, id, colName):
     push_data(id, rows, columns)
     if len(rows) > 10000:
         rows = rows[:10000]
-    return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows})
+    shape = df.shape
+    return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
 
 
+@with_skeleton()
 def FillNaN(request, id, colName, method):
-    fileobj = AnalyticaFiles.objects.get(file_id=id)
     data = get_current_node(id)
     if data:
         columns = data["columns"]
@@ -131,9 +126,11 @@ def FillNaN(request, id, colName, method):
     push_data(id, rows, columns)
     if len(rows) > 10000:
         rows = rows[:10000]
-    return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows})
+    shape = df.shape
+    return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
 
 
+@with_skeleton()
 def PythonCodeSpace(request, id):
     if request.method == 'POST':
         code = request.POST.get('code')
@@ -153,8 +150,8 @@ def PythonCodeSpace(request, id):
             push_data(id, rows, columns)
             if len(rows) > 10000:
                 rows = rows[:10000]
-            return render(request, 'components/dataset_table.html', {"file_id": id, "rows": rows, "columns": columns})
-            return HttpResponse(output["print"])
+            shape = df.shape
+            return render(request, 'components/dataset_table.html', {"file_id": id, "rows": rows, "columns": columns, 'shape': shape})
         except Exception as e:
             output["error"] = str(e)
             return HttpResponse(output["error"])
@@ -177,19 +174,19 @@ def ChatWithCSV(request, id):
     return render(request, 'live_chat.html', {"file_id": id})
 
 
+@with_skeleton()
 def AutoCleaning(request, id):
-    if request.method == "POST":
-        return render(request, 'components/skeleton_table.html', {"id": id}) 
-    if request.method == 'GET':
-        url = f"http://analytica_flask:5000/api/autoclean/{id}" 
-        response = session.get(url)
-        data = response.json()
-        columns = data["columns"]
-        rows = data["rows"]
-        push_data(id, rows, columns)
-        if len(rows) > 10000:
-            rows = rows[:10000]
-        return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows})
+    url = f"http://analytica_flask:5000/api/autoclean/{id}" 
+    response = session.get(url)
+    data = response.json()
+    columns = data["columns"]
+    rows = data["rows"]
+    push_data(id, rows, columns)
+    df = pd.DataFrame(rows, columns=columns)
+    if len(rows) > 10000:
+        rows = rows[:10000]
+    shape = df.shape
+    return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
 
 
 def save_changes(request, id):
@@ -203,22 +200,47 @@ def save_changes(request, id):
         updated_df.to_csv(f"{fileObj.file}.csv", index=False)
     return HttpResponse()
 
+def Export(request, id):
+    pass
+
+# @with_skeleton()
 def undo_action(request, id):
     data = undo(id)
-    if data == None:
-       return None
-    rows = data["rows"]
-    columns = data["columns"]
-    if len(rows) > 10000:
-        rows = rows[:10000]
-    return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows})
+    if data:
+        rows = data["rows"]
+        columns = data["columns"]
+        df = pd.DataFrame(rows, columns=columns)
+        if len(rows) > 10000:
+            rows = rows[:10000]
+        shape = df.shape
+        return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
+    
+    
 
+@with_skeleton()
 def redo_action(request, id):
     data = redo(id)
     if data == None:
         return None
     rows = data["rows"]
     columns = data["columns"]
+    df = pd.DataFrame(rows, columns=columns)
     if len(rows) > 10000:
         rows = rows[:10000]
-    return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows})
+    shape = df.shape
+    return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
+
+    
+def UploadFile(request):
+    # if request.method == "POST":
+    #     random_id = random.randint(1000, 9999) 
+    #     letters = ''.join(random.choices(string.ascii_uppercase, k=2))
+    #     new_file_id =  str(letters + str(random_id))
+    #     new_file = AnalyticaFiles.objects.create(
+    #         file_id = new_file_id,
+    #         # file_name = 
+    #     )
+    #     pass
+    clear_all()
+    files = AnalyticaFiles.objects.all()
+    return render(request, 'upload_file.html', {"files": files})

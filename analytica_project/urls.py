@@ -44,5 +44,6 @@ urlpatterns = [
     path('analytic-page/<str:id>/redo', redo_action, name="redoAction"),
 
     path('analytic-page/<str:id>/save', save_changes, name="save"),
+    path('analytic-page/<str:id>/export', Export, name="export_data"),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

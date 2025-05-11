@@ -13,17 +13,24 @@
     </div>
 
     <div class="file-upload-section">
-      <div class="file-card upload-card" onclick="triggerFileUpload()">
-        <input name="dataFile" type="file" id="file-input" style="display: none;" accept=".csv, .xlsx">
-        <div class="file-icon">
-          <div class="file-plus">+</div>
-        </div>
-        <p class="upload-text">Add New File</p>
+      <div class="file-card upload-card">
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input name="dataFile" type="file" id="file-input" style="display: none;" accept=".csv, .xlsx">
+          
+          <!-- Button triggers input file dialog -->
+          <label for="file-input" class="upload-text">Add New File</label>
+      
+          <!-- This button submits the form -->
+          <button type="submit" class="file-icon">
+            <div class="file-plus">+</div>
+          </button>
+        </form>
       </div>
 
       {% for file in files %}
       <div class="file-container">
-        <a href="{% url 'analytic_page' file.file_id%}">
+        <a href="{% url 'analytic_page' file.file_id %}">
           <div class="file-item">
             <div class="file-icon">📄</div>
             <div class="file-name">{{file.file_name}}</div>
@@ -41,34 +48,6 @@
     function triggerFileUpload() {
       fileInput.click();
     }
-
-    {% comment %} fileInput.addEventListener('change', (event) => {
-      const files = event.target.files;
-
-      for (const file of files) {
-        const fileCard = document.createElement('div');
-        fileCard.classList.add('file-card');
-
-        // File Icon
-        const fileIcon = document.createElement('div');
-        fileIcon.classList.add('file-icon');
-        const fileType = document.createElement('p');
-        fileType.classList.add('file-type');
-        fileType.textContent = file.name.split('.').pop().toUpperCase();
-        fileIcon.appendChild(fileType);
-
-        // Editable File Name
-        const fileNameInput = document.createElement('input');
-        fileNameInput.type = 'text';
-        fileNameInput.classList.add('file-name-input');
-        fileNameInput.value = file.name;
-
-        // Append Elements
-        fileCard.appendChild(fileIcon);
-        fileCard.appendChild(fileNameInput);
-        fileList.appendChild(fileCard);
-      } {% endcomment %}
-    {% comment %} }); {% endcomment %}
   </script>
 </body>
 </html>

@@ -111,7 +111,7 @@ body {
 }
 
 .undo-btn:hover {
-  background-color: #d1d5db; /* Darker gray on hover */
+  background-color: #d1d5db; 
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
@@ -135,7 +135,6 @@ body {
   transition: opacity 0.3s ease;
 }
 
-/* Modal content */
 .modal-content {
   background-color: #fff;
   padding: 24px;
@@ -154,7 +153,6 @@ body {
   opacity: 1;
 }
 
-/* Message styling */
 .modal-content p {
   margin: 0 0 24px;
   font-size: 16px;
@@ -163,14 +161,12 @@ body {
   white-space: normal;
 }
 
-/* Button container */
 .confirm-popup {
   display: flex;
   justify-content: center;
   gap: 12px;
 }
 
-/* Button styling */
 .modal-content button {
   padding: 10px 24px;
   border: none;
@@ -375,9 +371,6 @@ body {
 }
 
 
-
-
-/* Terminal Panel */
 .terminal {
   overflow: auto;
   height: 200px; 
@@ -545,7 +538,6 @@ body {
   overflow: hidden;
 }
 
-/* Output Box */
 .code-output {
   background: #151515;
   color: #bbb;
@@ -571,8 +563,6 @@ body {
   margin-left: 8px;
   display: flex;
 }
-
-
 
 
 .table-container {
@@ -671,7 +661,6 @@ body {
   width: 40px;
   height: 40px;
 }
-
 
 
 .skeleton-table {

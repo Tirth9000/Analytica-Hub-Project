@@ -1,6 +1,3 @@
-// script.js
-
-// Highlight the active section in navbar
 window.addEventListener('scroll', () => {
     const sections = document.querySelectorAll('.section');
     const navLinks = document.querySelectorAll('.nav-link');
