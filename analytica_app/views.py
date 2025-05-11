@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.urls import reverse
-from .middleware import with_skeleton
+from .middleware import with_skeleton, redo_with_skeleton, undo_with_skeleton
 from .models import AnalyticaFiles
 from utility.redis_utils import *
 from .main_tasks import *
@@ -203,7 +203,7 @@ def save_changes(request, id):
 def Export(request, id):
     pass
 
-# @with_skeleton()
+@undo_with_skeleton()
 def undo_action(request, id):
     data = undo(id)
     if data:
@@ -215,9 +215,7 @@ def undo_action(request, id):
         shape = df.shape
         return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
     
-    
-
-@with_skeleton()
+@redo_with_skeleton()
 def redo_action(request, id):
     data = redo(id)
     if data == None:

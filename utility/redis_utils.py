@@ -20,6 +20,10 @@ def get_index_value(file_id):
     index_value = redis_client.get(key)
     return int(index_value) if index_value else -1 
 
+def get_redis_len(file_id):
+    length = redis_client.llen(file_id)
+    return (length-1)
+
 def push_data(file_id, rows, columns):
     key = get_pointer_key(file_id)
     index_value = get_index_value(file_id)
@@ -48,7 +52,6 @@ def redo(file_id):
     key = get_pointer_key(file_id)
     index_value = get_index_value(file_id)
     queue_length = redis_client.llen(file_id)
-
     if index_value >= queue_length - 1:
         return None
 
