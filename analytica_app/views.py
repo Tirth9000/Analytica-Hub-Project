@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse
+from django.template.loader import render_to_string
 from django.urls import reverse
 from .middleware import with_skeleton, redo_with_skeleton, undo_with_skeleton
 from .models import AnalyticaFiles
@@ -98,7 +99,7 @@ def DropNaN(request, id, colName):
     push_data(id, rows, columns)
     if len(rows) > 10000:
         rows = rows[:10000]
-    shape = df.shape
+    shape = removed_nan_df.shape
     return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
 
 
@@ -130,34 +131,36 @@ def FillNaN(request, id, colName, method):
     return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
 
 
-@with_skeleton()
-def PythonCodeSpace(request, id):
-    if request.method == 'POST':
-        code = request.POST.get('code')
-        capture_stdout = io.StringIO()
-        sys.stdout = capture_stdout
-        output = {"print": "", "error": ""}
-        data = get_current_node(id)
-        if data:
-            columns = data["columns"]
-            rows = data["rows"]
-            df = pd.DataFrame(rows, columns=columns)
-        try:
-            exec(code)
-            output["print"] = capture_stdout.getvalue()
-            rows = df.values.tolist()
-            columns = df.columns.tolist()
-            push_data(id, rows, columns)
-            if len(rows) > 10000:
-                rows = rows[:10000]
-            shape = df.shape
-            return render(request, 'components/dataset_table.html', {"file_id": id, "rows": rows, "columns": columns, 'shape': shape})
-        except Exception as e:
-            output["error"] = str(e)
-            return HttpResponse(output["error"])
-        finally:
-            sys.stdout = sys.__stdout__
-    return HttpResponse("hello")
+# @with_skeleton()
+# def PythonCodeSpace(request, id):
+#     if request.method == 'GET':
+#         code = request.session.get('code', '')
+#         # capture_stdout = io.StringIO()
+#         # sys.stdout = capture_stdout
+#         # output = {"print": "", "error": ""}
+#         data = get_current_node(id)
+#         if data:
+#             columns = data["columns"]
+#             rows = data["rows"]
+#             df = pd.DataFrame(rows, columns=columns)
+#         try:
+#             exec_env = {'df': df, 'pd': pd}
+#             exec(code, {}, exec_env)
+#             print(exec_env['df'])  # This will print the DataFrame to the console
+#             # output["print"] = capture_stdout.getvalue()
+#             rows = exec_env['df'].values.tolist()
+#             columns = exec_env['df'].columns.tolist()
+#             push_data(id, rows, columns)
+#             if len(rows) > 10000:
+#                 rows = rows[:10000]
+#             shape = exec_env['df'].shape  # Updated to use exec_env['df']
+#             return render(request, 'components/dataset_table.html', {"file_id": id, "rows": rows, "columns": columns, 'shape': shape})
+#         except Exception as e:
+#             # output["error"] = str(e)
+#             return HttpResponse(f"<p id='output' hx-swap-oob='true'>{str(e)}</p>")
+#         finally:
+#             sys.stdout = sys.__stdout__
+#     return HttpResponse("Something went wrong, please try again later.")
 
 
 session = requests.Session()
@@ -201,7 +204,18 @@ def save_changes(request, id):
     return HttpResponse()
 
 def Export(request, id):
-    pass
+    if request.method == "GET":
+        file_name = AnalyticaFiles.objects.get(file_id=id).file_name
+        data = get_current_node(id)
+        if data:
+            columns = data["columns"]
+            rows = data["rows"]
+            df = pd.DataFrame(rows, columns=columns)
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = f'attachment; filename="{file_name}.csv"'
+            df.to_csv(response, index=False)
+            return response
+
 
 @undo_with_skeleton()
 def undo_action(request, id):
@@ -228,6 +242,25 @@ def redo_action(request, id):
     shape = df.shape
     return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
 
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 def UploadFile(request):
     # if request.method == "POST":

@@ -52,7 +52,8 @@
           <button class="file-btn">
             <span class="icon">📤</span> Export
           </button>
-        </a></div>
+        </a>
+      </div>
     </div>
     <div class="container"></div>
     <div class="csv-table-container">
@@ -81,39 +82,30 @@
       </div>
     </div>
 
-    <div class="terminal-container">
-      <div
-        id="toggleTerminal"
-        onclick="toggleTerminal()"
-        class="fixed bottom-0 left-0 w-full bg-zinc-600 text-white px-4 p-1 flex items-center">
-        <img src="/static/images/terminal_icon.png" class="terminal-icon" />
-        Terminal
-      </div>
-
-      <div
-        id="terminal"
-        class="terminal fixed bottom-0 left-0 w-full bg-black text-green-400 p-0 hidden shadow-lg">
-        <div id="drag-handle"></div>
-
-        <div id="code-container" class="code-container">
-          <div class="code-node">
-            <div class="code-header">
-              <div class="button-group">
-                <button class="add-node-btn" onclick="addCodeNode()">➕</button>
-                <button class="run-btn" type="submit" hx-on:click="document.querySelector('.code-form').requestSubmit();">▶</button>
-                <button class="extra-btn">⚙️</button>
-              </div>
-            </div>
-            <form class="code-form" hx-post="{% url 'codespace' id=file.file_id%}" hx-trigger="submit" hx-target=".csv-table" hx-swap="outerHTML">
-              {% csrf_token %}
-              <textarea name="code" class="code-input" placeholder="Assume 'df' as the dataframe variable." oninput="adjustHeight(this)"></textarea>
-            </form>
-            <div class="code-output">Output will appear here...</div>
-          </div>
-        </div>
-      </div>
-    </div>
     <script>
+      const input = document.getElementById('terminal-input');
+      const brackets = {
+        '(': ')',
+        '[': ']',
+        '{': '}',
+        '"': '"',
+        "'": "'",
+        '`': '`'
+      };
+
+      input.addEventListener('keydown', (e) => {
+        const open = e.key;
+        const close = brackets[open];
+        if (close && !e.ctrlKey && !e.metaKey) {
+          e.preventDefault();
+          const start = input.selectionStart;
+          const end = input.selectionEnd;
+          const value = input.value;
+          input.value = value.slice(0, start) + open + close + value.slice(end);
+          input.selectionStart = input.selectionEnd = start + 1;
+        }
+      });
+
       function showPopup() {
         const modal = document.getElementById('popupModal');
         modal.style.display = 'flex';
@@ -188,8 +180,8 @@
 
       function addCodeNode() {
         const container = document.getElementById("code-container");
-        const template = document.getElementById("code-node-template");
-        const clone = template.content.cloneNode(true);
+        const template = document.getElementById("code-node");
+        clone = template.cloneNode(true);
         container.appendChild(clone);
         container.scrollTop = container.scrollHeight;
       }

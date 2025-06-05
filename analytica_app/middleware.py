@@ -8,6 +8,7 @@ def with_skeleton(template='components/skeleton_table.html'):
         def _wrapped_view(request, *args, **kwargs):
             if not request.GET.get('load_data'):
                 url = request.build_absolute_uri() + '?load_data=true'
+                request.session['code'] = request.POST.get('code', '')
                 return render(request, template, {'custom_url': url})
             return view_func(request, *args, **kwargs)
         return _wrapped_view

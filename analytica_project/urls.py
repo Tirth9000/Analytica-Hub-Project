@@ -36,7 +36,7 @@ urlpatterns = [
     path('analytic-page/<str:id>/detials/<str:colName>/drop-nan', DropNaN, name='dropna'),
     path('analytic-page/<str:id>/detials/<str:colName>/fill-nan/<str:method>', FillNaN, name='fillna'),
 
-    path('analytic-page/<str:id>/python-codespace', PythonCodeSpace, name='codespace'),
+    # path('analytic-page/<str:id>/python-codespace', PythonCodeSpace, name='codespace'),
     path('analytic-page/<str:id>/live-chat', ChatWithCSV, name='chatwithCSV'),
     path('analytic-page/<str:id>/auto-clean', AutoCleaning, name='autoclean'),
 
