@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect, HttpResponse
-from django.template.loader import render_to_string
-from django.urls import reverse
+from django.http import JsonResponse
 from .middleware import with_skeleton, redo_with_skeleton, undo_with_skeleton
 from .models import AnalyticaFiles
 from utility.redis_utils import *
 from .main_tasks import *
 from templates import *
 import pandas as pd
-import requests, io
-import io, sys
+import requests, random
+from uuid import uuid4
 
 # Create your views here.
 def LandingPage(request):
@@ -36,6 +35,28 @@ def AnalyticPage(request, id):
         shape = df.shape
         return render(request, 'components/dataset_table.html', {"file_id": id, "columns": columns, "rows": rows, 'shape': shape})
     return render(request, 'analytic.html', {"file": fileObj})
+
+
+def UploadFile(request):
+    if request.method == "POST":
+        file = request.FILES.get('dataFile')
+        newId = uuid4().hex[:6].upper() 
+        while AnalyticaFiles.objects.filter(file_id=newId).exists():
+            newId = uuid4().hex[:6].upper()
+        if file:
+            file_name = file.name
+            new_file = AnalyticaFiles.objects.create(
+                file_id = newId,
+                file_name=file_name, 
+                file_path=file
+                )
+            new_file.save()
+            return JsonResponse({"status": "success", "message": f"File '{file_name}' uploaded successfully."})
+        return JsonResponse({"status": "error", "message": "No file provided."}, status=400)
+    clear_all()
+
+    files = AnalyticaFiles.objects.all()
+    return render(request, 'upload_file.html', {"files": files})
 
 
 def RenameFile(request, id):
@@ -131,38 +152,6 @@ def FillNaN(request, id, colName, method):
     return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
 
 
-# @with_skeleton()
-# def PythonCodeSpace(request, id):
-#     if request.method == 'GET':
-#         code = request.session.get('code', '')
-#         # capture_stdout = io.StringIO()
-#         # sys.stdout = capture_stdout
-#         # output = {"print": "", "error": ""}
-#         data = get_current_node(id)
-#         if data:
-#             columns = data["columns"]
-#             rows = data["rows"]
-#             df = pd.DataFrame(rows, columns=columns)
-#         try:
-#             exec_env = {'df': df, 'pd': pd}
-#             exec(code, {}, exec_env)
-#             print(exec_env['df'])  # This will print the DataFrame to the console
-#             # output["print"] = capture_stdout.getvalue()
-#             rows = exec_env['df'].values.tolist()
-#             columns = exec_env['df'].columns.tolist()
-#             push_data(id, rows, columns)
-#             if len(rows) > 10000:
-#                 rows = rows[:10000]
-#             shape = exec_env['df'].shape  # Updated to use exec_env['df']
-#             return render(request, 'components/dataset_table.html', {"file_id": id, "rows": rows, "columns": columns, 'shape': shape})
-#         except Exception as e:
-#             # output["error"] = str(e)
-#             return HttpResponse(f"<p id='output' hx-swap-oob='true'>{str(e)}</p>")
-#         finally:
-#             sys.stdout = sys.__stdout__
-#     return HttpResponse("Something went wrong, please try again later.")
-
-
 session = requests.Session()
 def ChatWithCSV(request, id):
     if request.method == "POST":
@@ -243,35 +232,3 @@ def redo_action(request, id):
     return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
 
     
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-def UploadFile(request):
-    # if request.method == "POST":
-    #     random_id = random.randint(1000, 9999) 
-    #     letters = ''.join(random.choices(string.ascii_uppercase, k=2))
-    #     new_file_id =  str(letters + str(random_id))
-    #     new_file = AnalyticaFiles.objects.create(
-    #         file_id = new_file_id,
-    #         # file_name = 
-    #     )
-    #     pass
-    clear_all()
-    files = AnalyticaFiles.objects.all()
-    return render(request, 'upload_file.html', {"files": files})

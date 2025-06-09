@@ -72,6 +72,7 @@ body {
 }
 
 .file-plus {
+  pointer-events: none;
   font-size: 50px;
   font-weight: bold;
   color: #4e54c8;

@@ -14,18 +14,12 @@
 
     <div class="file-upload-section">
       <div class="file-card upload-card">
-        <form method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-          <input name="dataFile" type="file" id="file-input" style="display: none;" accept=".csv, .xlsx">
-          
-          <!-- Button triggers input file dialog -->
-          <label for="file-input" class="upload-text">Add New File</label>
-      
-          <!-- This button submits the form -->
-          <button type="submit" class="file-icon">
-            <div class="file-plus">+</div>
-          </button>
-        </form>
+        <label for="file-input" class="upload-text"> 
+            Upload file <input name="dataFile" type="file" id="file-input" style="display: none;" accept=".csv, .xlsx" onchange="uploadFile(event)"/>
+            <span type="submit" class="file-icon">
+              <div class="file-plus">+</div>
+            </span>
+        </label>
       </div>
 
       {% for file in files %}
@@ -47,6 +41,33 @@
 
     function triggerFileUpload() {
       fileInput.click();
+    }
+
+    function uploadFile(event) {
+      const files = event.target.files;
+      if (files.length > 0) {
+
+        console.log('File uploaded:', files[0].name);
+      }
+      const formData = new FormData();
+      formData.append('dataFile', files[0]);
+      fetch('{% url "upload_file" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+        }
+      }).then(response => {
+        if (response.ok) {
+          return response.json();
+        } 
+      }).then(data => {
+        console.log('File uploaded successfully:', data);
+        window.location.reload(); // Reload to show the new file
+      }).catch(error => {
+        window.alert('Error uploading file: ' + error.message);
+        console.error('Error uploading file:', error);
+      });
     }
   </script>
 </body>

@@ -2887,3 +2887,196 @@ pandasai.exceptions.PandaAIApiCallError: Server down for maintenance, try again 
 
 2025-06-05 05:34:27 [INFO] Maximum retry attempts exceeded. Last error: Server down for maintenance, try again later!
 2025-06-05 05:34:27 [INFO] 172.18.0.6 - - [05/Jun/2025 05:34:27] "[35m[1mGET /api/autoclean/UI8923 HTTP/1.1[0m" 500 -
+2025-06-07 10:30:09 [INFO] Question: You are a Data Cleaning Assistant.
+
+TASK: Clean the given CSV/DataFrame and return the CLEANED DATA as raw CSV (No explanation, No charts).
+
+=> First of all perform this step then go for Basic Cleaning: 
+-> Replace Dirty Values (case-insensitive) across all columns:
+  Replace these values (in any case variation like 'ERROR', 'Error', 'error', 'Unknown', 'UNKNOWN' etc.) with np.nan:
+
+BASIC CLEANING STEPS:
+
+1. Standardize Column Names:
+- Convert all column names to lowercase.
+- Replace spaces & special characters with underscores.
+
+2. Convert Data Types:
+- Convert numeric-looking strings to numbers.
+- Convert date strings to datetime.
+
+3. Handle Missing Values:
+- Drop columns with >50% missing values.
+- Fill nulls:
+  - Numerical Columns → Mean or Median.
+  - Categorical Columns → Mode.
+  - Datetime Columns → Forward Fill → Backward Fill.
+
+4. Remove Duplicates:
+- Drop fully duplicate rows.
+
+5. Final Step:
+- Strip spaces from strings.
+- STRICKLY - Beforing responding check all above steps properly even after performing on the dataset.
+- Return cleaned DataFrame as raw CSV in StringResponse, but don't create new file strickly.
+2025-06-07 10:30:10 [INFO] Running PandaAI with bamboo_llm LLM...
+2025-06-07 10:30:10 [INFO] Prompt ID: b0e5ae26-9953-4d73-a55f-61e46a32bc77
+2025-06-07 10:30:10 [INFO] Generating new code...
+2025-06-07 10:30:10 [INFO] Using Prompt: <tables>
+
+<table dialect="duckdb" table_name="table_c37e466ddaaa5d970ccece6855e16cd2" dimensions="10000x8">
+Transaction ID,Item,Quantity,Price Per Unit,Total Spent,Payment Method,Location,Transaction Date
+TXN_1961373,Coffee,2,2.0,4.0,Credit Card,Takeaway,2023-09-08
+TXN_4977031,Cake,4,3.0,12.0,Cash,In-store,2023-05-16
+TXN_4271903,Cookie,4,1.0,ERROR,Credit Card,In-store,2023-07-19
+TXN_7034554,Salad,2,5.0,10.0,UNKNOWN,UNKNOWN,2023-04-27
+TXN_3160411,Coffee,2,2.0,4.0,Digital Wallet,In-store,2023-06-11
+</table>
+
+
+</tables>
+
+You are already provided with the following functions that you can call:
+<function>
+def execute_sql_query(sql_query: str) -> pd.Dataframe
+    """This method connects to the database, executes the sql query and returns the dataframe"""
+</function>
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ You are a Data Cleaning Assistant.
+
+TASK: Clean the given CSV/DataFrame and return the CLEANED DATA as raw CSV (No explanation, No charts).
+
+=> First of all perform this step then go for Basic Cleaning: 
+-> Replace Dirty Values (case-insensitive) across all columns:
+  Replace these values (in any case variation like 'ERROR', 'Error', 'error', 'Unknown', 'UNKNOWN' etc.) with np.nan:
+
+BASIC CLEANING STEPS:
+
+1. Standardize Column Names:
+- Convert all column names to lowercase.
+- Replace spaces & special characters with underscores.
+
+2. Convert Data Types:
+- Convert numeric-looking strings to numbers.
+- Convert date strings to datetime.
+
+3. Handle Missing Values:
+- Drop columns with >50% missing values.
+- Fill nulls:
+  - Numerical Columns → Mean or Median.
+  - Categorical Columns → Mode.
+  - Datetime Columns → Forward Fill → Backward Fill.
+
+4. Remove Duplicates:
+- Drop fully duplicate rows.
+
+5. Final Step:
+- Strip spaces from strings.
+- STRICKLY - Beforing responding check all above steps properly even after performing on the dataset.
+- Return cleaned DataFrame as raw CSV in StringResponse, but don't create new file strickly.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+
+Generate python code and return full updated code:
+
+### Note: Use only relevant table for query and do aggregation, sorting, joins and grouby through sql query
+2025-06-07 10:30:30 [INFO] Code Generated:
+# TODO: import the required dependencies
+import pandas as pd
+import numpy as np
+
+# Function to execute SQL
+def execute_sql_query(sql_query: str) -> pd.Dataframe:
+    """This method connects to the database, executes the sql query and returns the dataframe"""
+
+# Extract data from the database
+sql_query = "SELECT * FROM table_c37e466ddaaa5d970ccece6855e16cd2"
+df = execute_sql_query(sql_query)
+
+# Replace dirty values across all columns
+df.replace(['ERROR', 'Error', 'error', 'Unknown', 'UNKNOWN'], np.nan, inplace=True, regex=True)
+
+# Standardize column names
+df.columns = df.columns.str.lower().str.replace(" ", "_").str.replace(r'[^\w\s]', '', regex=True)
+
+# Convert data types
+df['transaction_date'] = pd.to_datetime(df['transaction_date'])
+for column in df.columns:
+    if df[column].dtype == object:
+        try:
+            df[column] = pd.to_numeric(df[column])
+        except ValueError:
+            pass
+
+# Handle missing values
+df.dropna(axis=1, thresh=df.shape[0]*0.5, inplace=True)
+for column in df.columns:
+    if df[column].dtype == np.number:
+        df[column].fillna(df[column].mean(), inplace=True)
+    elif df[column].dtype == object:
+        df[column].fillna(df[column].mode()[0], inplace=True)
+    elif df[column].dtype == 'datetime64[ns]':
+        df[column].fillna(method='ffill', inplace=True)
+        df[column].fillna(method='bfill', inplace=True)
+
+# Remove duplicates
+df.drop_duplicates(inplace=True)
+
+# Final step - strip spaces from strings
+df = df.applymap(lambda x: x.strip() if type(x)==str else x)
+
+# Convert cleaned DataFrame to raw CSV
+cleaned_data = df.to_csv(index=False)
+
+# Declare result var
+result = {"type": "string", "value": cleaned_data}
+2025-06-07 10:30:30 [INFO] Validating code requirements...
+2025-06-07 10:30:30 [INFO] Code validation successful.
+2025-06-07 10:30:30 [INFO] Cleaning the generated code...
+2025-06-07 10:30:30 [INFO] Executing code: import pandas as pd
+import numpy as np
+sql_query = 'SELECT * FROM table_c37e466ddaaa5d970ccece6855e16cd2'
+df = execute_sql_query(sql_query)
+df.replace(['ERROR', 'Error', 'error', 'Unknown', 'UNKNOWN'], np.nan, inplace=True, regex=True)
+df.columns = df.columns.str.lower().str.replace(' ', '_').str.replace('[^\\w\\s]', '', regex=True)
+df['transaction_date'] = pd.to_datetime(df['transaction_date'])
+for column in df.columns:
+    if df[column].dtype == object:
+        try:
+            df[column] = pd.to_numeric(df[column])
+        except ValueError:
+            pass
+df.dropna(axis=1, thresh=df.shape[0] * 0.5, inplace=True)
+for column in df.columns:
+    if df[column].dtype == np.number:
+        df[column].fillna(df[column].mean(), inplace=True)
+    elif df[column].dtype == object:
+        df[column].fillna(df[column].mode()[0], inplace=True)
+    elif df[column].dtype == 'datetime64[ns]':
+        df[column].fillna(method='ffill', inplace=True)
+        df[column].fillna(method='bfill', inplace=True)
+df.drop_duplicates(inplace=True)
+df = df.applymap(lambda x: x.strip() if type(x) == str else x)
+cleaned_data = df.to_csv(index=False)
+result = {'type': 'string', 'value': cleaned_data}
+2025-06-07 10:30:30 [INFO] generated new fontManager
+2025-06-07 10:30:31 [INFO] Response generated successfully.
+2025-06-07 10:30:31 [INFO] 172.18.0.6 - - [07/Jun/2025 10:30:31] "GET /api/autoclean/UI8923 HTTP/1.1" 200 -
+2025-06-07 11:26:00 [INFO]  * Detected change in '/app/analytica_app/views.py', reloading
