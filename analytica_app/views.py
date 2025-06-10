@@ -9,6 +9,7 @@ import pandas as pd
 import requests, random
 from uuid import uuid4
 
+
 # Create your views here.
 def LandingPage(request):
     return render(request, 'landing.html')
@@ -26,7 +27,7 @@ def AnalyticPage(request, id):
             rows = data["rows"]
             df = pd.DataFrame(rows, columns=columns)
         else:
-            df = pd.read_csv(fileObj.file)
+            df = pd.read_csv(fileObj.file_path)
             columns = df.columns.tolist()
             rows = df.values.tolist()
             push_data(id, rows, columns)
@@ -54,9 +55,13 @@ def UploadFile(request):
             return JsonResponse({"status": "success", "message": f"File '{file_name}' uploaded successfully."})
         return JsonResponse({"status": "error", "message": "No file provided."}, status=400)
     clear_all()
-
     files = AnalyticaFiles.objects.all()
     return render(request, 'upload_file.html', {"files": files})
+
+def DeleteFile(request, id):
+    file = AnalyticaFiles.objects.get(file_id = id)
+    file.delete()
+    return redirect('upload_file')
 
 
 def RenameFile(request, id):
@@ -189,8 +194,9 @@ def save_changes(request, id):
             columns = newFile["columns"]
             rows = newFile["rows"]
             updated_df = pd.DataFrame(rows, columns=columns)
-        updated_df.to_csv(f"{fileObj.file}.csv", index=False)
+        updated_df.to_csv(f"{fileObj.file_path}.csv", index=False)
     return HttpResponse()
+
 
 def Export(request, id):
     if request.method == "GET":
@@ -218,6 +224,7 @@ def undo_action(request, id):
         shape = df.shape
         return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
     
+
 @redo_with_skeleton()
 def redo_action(request, id):
     data = redo(id)
@@ -230,5 +237,3 @@ def redo_action(request, id):
         rows = rows[:10000]
     shape = df.shape
     return render(request, 'components/dataset_table.html', {'file_id': id, 'columns': columns, 'rows': rows, 'shape': shape})
-
-    

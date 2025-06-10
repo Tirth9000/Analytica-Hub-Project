@@ -29,6 +29,7 @@ urlpatterns = [
     path('analytica-hub/signup', UserRegister, name="signup"),
 
     path('upload-file/', UploadFile, name='upload_file'),
+    path('upload-file/<str:id>/delete', DeleteFile, name='delete_file'),
     path('analytic-page/<str:id>', AnalyticPage, name='analytic_page'),
     path('analytic-page/<str:id>/rename-file', RenameFile, name='rename_file'),
     path('analytic-page/<str:id>/details/<str:colName>', Details, name='details'),

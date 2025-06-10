@@ -1,74 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Analytica-Hub</title>
-  <link rel="stylesheet" href="/static/upload_file.css">
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>Upload Your Files</h1>
-    </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytica-Hub</title>
+    <link rel="stylesheet" href="/static/upload_file.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Upload Your Files</h1>
+      </div>
 
-    <div class="file-upload-section">
-      <div class="file-card upload-card">
-        <label for="file-input" class="upload-text"> 
-            Upload file <input name="dataFile" type="file" id="file-input" style="display: none;" accept=".csv, .xlsx" onchange="uploadFile(event)"/>
+      <div class="file-upload-section">
+        <div class="file-card upload-card">
+          <label for="file-input" class="upload-text">
+            Upload file
+            <input
+              name="dataFile"
+              type="file"
+              id="file-input"
+              style="display: none"
+              accept=".csv, .xlsx"
+              onchange="uploadFile(event)"
+            />
             <span type="submit" class="file-icon">
               <div class="file-plus">+</div>
             </span>
-        </label>
-      </div>
+          </label>
+        </div>
 
-      {% for file in files %}
-      <div class="file-container">
-        <a href="{% url 'analytic_page' file.file_id %}">
-          <div class="file-item">
-            <div class="file-icon">📄</div>
-            <div class="file-name">{{file.file_name}}</div>
+        {% for file in files %}
+        <div class="file-container">
+          <a href="{% url 'analytic_page' file.file_id %}">
+            <div class="file-item">
+              <div class="file-icon">📄</div>
+              <div class="file-name">{{file.file_name}}</div>
+            </div>
+          </a>
+          <div class="delete-btn-container">
+            <button type="button" class="delete-btn" onclick="showPopup(event)">
+              <img
+                class="delete-icon"
+                src="/static/images/delete.png"
+                alt="delete"
+                class="delete-icon"
+              />
+            </button>
           </div>
-        </a>
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
-  </div>
 
-  <script>
-    const fileInput = document.getElementById('file-input');
-    const fileList = document.getElementById('file-list');
+    <div class="popup-container">
+      <div class="popup-content">
+        <div class="popup-message">
+          Are you sure you want to delete this item?
+        </div>
+        <div class="popup-buttons">
+          <a class="popup-button delete" onclick="closePopup()">Delete</a>
+          <button class="popup-button cancel" onclick="closePopup()">Cancel</button>
+        </div>
+      </div>
+    </div>
 
-    function triggerFileUpload() {
-      fileInput.click();
-    }
-
-    function uploadFile(event) {
-      const files = event.target.files;
-      if (files.length > 0) {
-
-        console.log('File uploaded:', files[0].name);
+    <script>
+      function closePopup() {
+        const popup = document.querySelector(".popup-container");
+        popup.style.display = "none";
       }
-      const formData = new FormData();
-      formData.append('dataFile', files[0]);
-      fetch('{% url "upload_file" %}', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'X-CSRFToken': '{{ csrf_token }}',
+
+      function showPopup(event) {
+        event.preventDefault();
+        const popup = document.querySelector(".popup-container");
+        popup.style.display = "block";
+      }
+
+      function deleteFile(event) {
+        event.preventDefault();
+        const popup = document.querySelector(".popup-container");
+        popup.style.display = "none";
+      }
+
+      const fileInput = document.getElementById("file-input");
+      const fileList = document.getElementById("file-list");
+
+      function triggerFileUpload() {
+        fileInput.click();
+      }
+
+      function uploadFile(event) {
+        const files = event.target.files;
+        if (files.length > 0) {
+          console.log("File uploaded:", files[0].name);
         }
-      }).then(response => {
-        if (response.ok) {
-          return response.json();
-        } 
-      }).then(data => {
-        console.log('File uploaded successfully:', data);
-        window.location.reload(); // Reload to show the new file
-      }).catch(error => {
-        window.alert('Error uploading file: ' + error.message);
-        console.error('Error uploading file:', error);
-      });
-    }
-  </script>
-</body>
+        const formData = new FormData();
+        formData.append("dataFile", files[0]);
+        fetch('{% url "upload_file" %}', {
+          method: "POST",
+          body: formData,
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+          })
+          .then((data) => {
+            console.log("File uploaded successfully:", data);
+            window.location.reload(); // Reload to show the new file
+          })
+          .catch((error) => {
+            window.alert("Error uploading file: " + error.message);
+            console.error("Error uploading file:", error);
+          });
+      }
+    </script>
+  </body>
 </html>
