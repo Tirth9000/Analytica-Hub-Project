@@ -4,119 +4,164 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Analytica-Hub</title>
-    <link rel="stylesheet" href="/static/upload_file.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <h1>Upload Your Files</h1>
+  <body class="m-0 font-['Poppins'] bg-[#f9f9f9] text-[#333]">
+    <div
+      id="notification"
+      class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg text-white transform transition-transform duration-300 ease-in-out"
+    ></div>
+    <div class="max-w-[1200px] mx-auto p-5">
+      <div class="text-center mb-[30px]">
+        <h1 class="text-[28px] font-semibold text-[#4e54c8]">
+          Upload Your Files
+        </h1>
       </div>
 
-      <div class="file-upload-section">
-        <div class="file-card upload-card">
-          <label for="file-input" class="upload-text">
-            Upload file
+      <div class="flex flex-wrap gap-5 justify-start">
+        <div
+          class="w-[180px] h-[225px] bg-white border-2 border-dashed border-gray-300 rounded-[10px] text-center shadow-[0_2px_4px_rgba(0,0,0,0.1)] p-2.5 flex flex-col justify-start items-center hover:border-[#4e54c8] cursor-pointer"
+        >
+          <label
+            for="file-input"
+            class="w-full h-full flex flex-col items-center justify-center"
+          >
             <input
               name="dataFile"
               type="file"
               id="file-input"
-              style="display: none"
+              class="hidden"
               accept=".csv, .xlsx"
               onchange="uploadFile(event)"
             />
-            <span type="submit" class="file-icon">
-              <div class="file-plus">+</div>
+            <span class="text-[#333]">Upload file</span>
+            <span
+              class="w-[120px] h-[140px] bg-gradient-to-br from-[#eee] to-[#ddd] rounded-[5px] relative mb-2.5 flex justify-center items-center"
+            >
+              <div class="text-[70px] font-bold text-[#4e54c8]">+</div>
             </span>
           </label>
         </div>
 
         {% for file in files %}
-        <div class="file-container">
-          <a href="{% url 'analytic_page' file.file_id %}">
-            <div class="file-item">
-              <div class="file-icon">📄</div>
-              <div class="file-name">{{file.file_name}}</div>
+        <div
+          class="w-[180px] h-[225px] p-5 bg-white rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
+        >
+          <a href="{% url 'analytic_page' file.file_id %}" class="block">
+            <div
+              class="flex flex-col items-center justify-center p-[15px] border border-[#e0e0e0] rounded-lg bg-[#fafafa] text-center transition-all duration-200 hover:-translate-y-[5px] hover:shadow-[0_6px_12px_rgba(0,0,0,0.15)]"
+            >
+              <div class="text-[65px] text-[#4caf50] mb-2.5">📄</div>
+              <div
+                class="text-[14px] text-[#333333] break-words whitespace-nowrap overflow-hidden text-ellipsis w-full"
+              >
+                {{file.file_name}}
+              </div>
             </div>
           </a>
-          <div class="delete-btn-container">
-            <button type="button" class="delete-btn" onclick="showPopup(event)">
+          <div class="flex justify-center items-center pt-[5px] w-full">
+            <button
+              type="button"
+              class="flex justify-center items-center p-[2px_3px] border border-black rounded-lg text-[#c84e4e] hover:scale-110 transition-transform"
+              onclick="showPopup(event)"
+            >
               <img
-                class="delete-icon"
+                class="w-5 h-5"
                 src="/static/images/delete.png"
                 alt="delete"
-                class="delete-icon"
               />
             </button>
           </div>
         </div>
-        {% endfor %}
-      </div>
-    </div>
 
-    <div class="popup-container">
-      <div class="popup-content">
-        <div class="popup-message">
-          Are you sure you want to delete this item?
+        <div class="hidden fixed inset-0 bg-black/50 z-50" id="popup">
+          <div
+            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[350px] bg-white rounded-[12px] p-5 shadow-[0_4px_20px_rgba(0,0,0,0.15)]"
+          >
+            <div class="text-center text-[#333] mb-5 text-[16px]">
+              Are you sure you want to delete this item?
+            </div>
+            <div class="flex justify-center gap-2.5">
+              <a
+                class="w-1/2 py-2 px-5 bg-[#f86969] text-black rounded-[6px] text-[14px] cursor-pointer transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_2px_8px_rgba(0,0,0,0.1)] flex flex-col-reverse justify-center items-center"
+                href="{% url 'delete_file' file.file_id %}"
+                onclick="closePopup()"
+                >Delete</a
+              >
+              <button
+                class="w-3/5 py-2 px-5 bg-[#dcdada] text-[#333] rounded-[6px] text-[14px] cursor-pointer transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_2px_8px_rgba(0,0,0,0.1)] flex flex-col-reverse justify-center items-center"
+                onclick="closePopup()"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="popup-buttons">
-          <a class="popup-button delete" onclick="closePopup()">Delete</a>
-          <button class="popup-button cancel" onclick="closePopup()">Cancel</button>
-        </div>
+
+        {% endfor %}
       </div>
     </div>
 
     <script>
       function closePopup() {
-        const popup = document.querySelector(".popup-container");
-        popup.style.display = "none";
+        const popup = document.getElementById("popup");
+        popup.classList.add("hidden");
       }
 
       function showPopup(event) {
         event.preventDefault();
-        const popup = document.querySelector(".popup-container");
-        popup.style.display = "block";
+        const popup = document.getElementById("popup");
+        popup.classList.remove("hidden");
       }
 
-      function deleteFile(event) {
-        event.preventDefault();
-        const popup = document.querySelector(".popup-container");
-        popup.style.display = "none";
+      function showNotification(message, status, duration = 2000) {
+        const notification = document.getElementById("notification");
+        notification.textContent = message;
+        notification.classList.remove("hidden");
+        if (status === 200) {
+          notification.classList.add("bg-[#4caf50]");
+        } else if (status === 400) {
+          notification.classList.add("bg-[#f44336]");
+        }
+
+        setTimeout(() => {
+          notification.classList.add("hidden");
+          window.location.reload();
+        }, duration);
       }
 
-      const fileInput = document.getElementById("file-input");
-      const fileList = document.getElementById("file-list");
-
-      function triggerFileUpload() {
-        fileInput.click();
-      }
-
-      function uploadFile(event) {
+      async function uploadFile(event) {
         const files = event.target.files;
-        if (files.length > 0) {
-          console.log("File uploaded:", files[0].name);
+        if (files[0].size === 0) {
+          showNotification("The selected file is empty.", 400);
+          return;
         }
         const formData = new FormData();
         formData.append("dataFile", files[0]);
-        fetch('{% url "upload_file" %}', {
-          method: "POST",
-          body: formData,
-          headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-          },
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-          })
-          .then((data) => {
-            console.log("File uploaded successfully:", data);
-            window.location.reload(); // Reload to show the new file
-          })
-          .catch((error) => {
-            window.alert("Error uploading file: " + error.message);
-            console.error("Error uploading file:", error);
+        try {
+          const response = await fetch('{% url "upload_file" %}', {
+            method: "POST",
+            body: formData,
+            headers: {
+              "X-CSRFToken": "{{ csrf_token }}",
+            },
           });
+          const data = await response.json();
+          if (response.status === 200) {
+            console.log(data.message);
+            showNotification(data.message, response.status);
+          } else if (response.status === 400) {
+            console.log(data.message);
+            showNotification(data.message, response.status);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          showNotification(
+            "An error occurred while uploading the file",
+            400,
+            7000
+          );
+        }
       }
     </script>
   </body>

@@ -79,34 +79,14 @@
           <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
           <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
           <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
         </table>
       </div>
     </div>
 
     <script>
-      const input = document.getElementById('terminal-input');
-      const brackets = {
-        '(': ')',
-        '[': ']',
-        '{': '}',
-        '"': '"',
-        "'": "'",
-        '`': '`'
-      };
-
-      input.addEventListener('keydown', (e) => {
-        const open = e.key;
-        const close = brackets[open];
-        if (close && !e.ctrlKey && !e.metaKey) {
-          e.preventDefault();
-          const start = input.selectionStart;
-          const end = input.selectionEnd;
-          const value = input.value;
-          input.value = value.slice(0, start) + open + close + value.slice(end);
-          input.selectionStart = input.selectionEnd = start + 1;
-        }
-      });
-
       function showPopup() {
         const modal = document.getElementById('popupModal');
         modal.style.display = 'flex';
@@ -124,72 +104,6 @@
         if (event.target === modal) {
             closePopup();
         }
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        initializeTerminal();
-    
-        document.body.addEventListener("htmx:afterOnLoad", function () {
-          initializeTerminal();
-        });
-      });
-    
-      function initializeTerminal() {
-        const terminal = document.getElementById("terminal");
-        const dragHandle = document.getElementById("drag-handle");
-        let isResizing = false;
-    
-        if (!terminal || !dragHandle) {
-            console.error("Terminal elements missing!");
-            return;
-        }
-    
-        window.toggleTerminal = function () {
-            terminal.classList.toggle("hidden");
-            if (!terminal.classList.contains("hidden")) {
-                terminal.style.height = "200px";
-            }
-        };
-    
-        dragHandle.addEventListener("mousedown", function (event) {
-            event.preventDefault();
-            isResizing = true;
-            document.addEventListener("mousemove", smoothResize);
-            document.addEventListener("mouseup", stopResize);
-        });
-    
-        function smoothResize(event) {
-            if (isResizing) {
-                requestAnimationFrame(() => {
-                    let newHeight = window.innerHeight - event.clientY;
-                    if (newHeight < 150) {
-                        terminal.classList.add("hidden");
-                    } else {
-                        terminal.classList.remove("hidden");
-                        terminal.style.height = `${newHeight}px`;
-                    }
-                });
-            }
-        }
-    
-        function stopResize() {
-            isResizing = false;
-            document.removeEventListener("mousemove", smoothResize);
-            document.removeEventListener("mouseup", stopResize);
-        }
-      }
-
-      function addCodeNode() {
-        const container = document.getElementById("code-container");
-        const template = document.getElementById("code-node");
-        clone = template.cloneNode(true);
-        container.appendChild(clone);
-        container.scrollTop = container.scrollHeight;
-      }
-
-      function adjustHeight(textarea) {
-        textarea.style.height = "auto";
-        textarea.style.height = textarea.scrollHeight + "px";
       }
     </script>
   </body>

@@ -52,11 +52,12 @@ def UploadFile(request):
                 file_path=file
                 )
             new_file.save()
-            return JsonResponse({"status": "success", "message": f"File '{file_name}' uploaded successfully."})
-        return JsonResponse({"status": "error", "message": "No file provided."}, status=400)
+            return JsonResponse({"message": f"File '{file_name}' uploaded successfully."}, status=200)
+        return JsonResponse({"message": "Something went wrong."}, status=400)
     clear_all()
     files = AnalyticaFiles.objects.all()
     return render(request, 'upload_file.html', {"files": files})
+
 
 def DeleteFile(request, id):
     file = AnalyticaFiles.objects.get(file_id = id)
