@@ -167,8 +167,8 @@ def ChatWithCSV(request, id):
         response = session.post(url, json=data)
         result = response.json()
         if result['type'] == 'img':
-            return HttpResponse(f'<img class="message received-img" src="/{result["response"]}">')
-        return HttpResponse(f'<div class="message received">{result["response"]}</div>')
+            return HttpResponse(f'<img class="justify-end max-w-[60%] h-5/4 mb-5 rounded-[15px] break-words self-start bg-[#333] p-[5px]" src="/{result["response"]}">')
+        return HttpResponse(f'<div class="justify-end max-w-[60%] p-2 mb-5 rounded-[15px] break-words bg-[#333] self-start">{result["response"]}</div>')
     return render(request, 'live_chat.html', {"file_id": id})
 
 
