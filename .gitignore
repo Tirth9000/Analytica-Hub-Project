@@ -1,5 +1,10 @@
 .env
+.vscode
+.DS_Store
 
-analytica_app/migrations
-analytica_app/__pycache__
-analytica_project/__pycache__
+analytica_app/migrations/
+analytica_app/__pycache__/
+auth_app/migrations/
+auth_app/__pycache__/
+
+analytica_project/__pycache__/

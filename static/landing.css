@@ -9,6 +9,10 @@ body {
   line-height: 1.6;
 }
 
+body.no-scroll {
+  overflow: hidden;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -347,4 +351,200 @@ body {
 
 .step-image img:hover {
   transform: scale(1.05);
+}
+
+
+
+
+
+
+
+
+
+/* Modal Styles */
+  .container {
+    max-width: 1100px;
+    margin: auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.05);
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  .trial {
+    color: #4caf50;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+  
+  .subtext {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+  
+  .toggle {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .toggle button {
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .toggle button.active {
+    background: #1f8c5b;
+    color: #fff;
+    border-color: #1f8c5b;
+  }
+  
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+  }
+  
+  .card {
+    background: #fefefe;
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    border: 1px solid #eaeaea;
+    transition: 0.3s;
+  }
+  
+  .card:hover {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+  }
+  
+  .plan-title {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  
+  .price {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #222;
+  }
+  
+  .price span {
+    font-size: 1rem;
+    color: #777;
+  }
+  
+  .card ul {
+    justify-items: self-start;
+    list-style: none;
+    margin-bottom: 25px;
+  }
+  
+  .card ul li {
+    margin-bottom: 10px;
+    color: #444;
+    font-size: 0.95rem;
+  }
+  
+  .basic ul li small {
+    margin-left: 15px;
+    color : gray;
+  }
+  
+  .standard ul li small {
+    margin-left: 15px;
+    color : gray;
+  }
+  
+  .btn-outline, .btn-solid {
+    margin-right: 2%;
+    padding: 10px 25px;
+    font-size: 1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .btn-outline {
+    background: transparent;
+    color: #1f8c5b;
+    border: 2px solid #1f8c5b;
+  }
+  
+  .btn-outline:hover {
+    background: #1f8c5b;
+    color: #fff;
+  }
+  
+  .basic .plan-title { color: #3f51b5; }
+  .standard .plan-title { color: #2e7d32; }
+  .premium .plan-title { color: #6a1b9a; }
+
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 70%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+  position: relative;
+  animation: slideIn 0.4s ease;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 28px;
+  color: #555;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+  color: #000;
 }

@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 class AnalyticaFiles(models.Model):
+    # user = models.ForeignKey('user', ondelete=models.CASCADE, null=True, blank=True)
     file_id = models.CharField(
         primary_key=True, 
         null=False, 

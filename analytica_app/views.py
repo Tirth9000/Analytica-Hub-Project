@@ -6,7 +6,7 @@ from utility.redis_utils import *
 from .main_tasks import *
 from templates import *
 import pandas as pd
-import requests, random
+import requests, random, shutil, os
 from uuid import uuid4
 
 
@@ -45,7 +45,7 @@ def UploadFile(request):
         while AnalyticaFiles.objects.filter(file_id=newId).exists():
             newId = uuid4().hex[:6].upper()
         if file:
-            file_name = file.name
+            file_name = file.name.split('.')[0]
             new_file = AnalyticaFiles.objects.create(
                 file_id = newId,
                 file_name=file_name, 
@@ -61,6 +61,9 @@ def UploadFile(request):
 
 def DeleteFile(request, id):
     file = AnalyticaFiles.objects.get(file_id = id)
+    file_path = f"./Media/{file.file_path}"
+    if os.path.exists(file_path):
+        os.remove(file_path)
     file.delete()
     return redirect('upload_file')
 
