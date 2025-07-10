@@ -1,5 +1,5 @@
 <p align="center">
-  <img style="width:50px; " src="static/images/Analytica_Hub.jpeg" alt="Analytica Hub Logo" width="200"/>
+  <img style="width:500px; " src="static/images/Analytica_Hub.jpeg" alt="Analytica Hub Logo" width="200"/>
 </p>
 
 # Analytica Hub
