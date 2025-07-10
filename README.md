@@ -18,7 +18,7 @@ AI functionalities like EDA, data cleaning, and natural language querying are ha
 - 📊 AI-powered **Exploratory Data Analysis (EDA)**
 - 🧹 One-click **AI-based Data Cleaning**
 - 💬 “**Chat with CSV**” using natural language queries
-  - Supports **textual** and **graph-based** responses (max 5 graphs/chat)
+  - Supports **textual** and **graph-based** responses
 - 🔄 Real-time undo/redo functionality using Redis
 - 🧠 Flask microservice for scalable and isolated AI processing
 - 🐳 Fully containerized using Docker
