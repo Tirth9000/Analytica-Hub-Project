@@ -363,7 +363,7 @@ body.no-scroll {
 
 /* Modal Styles */
   .container {
-    max-width: 1100px;
+    max-width: 90%;
     margin: auto;
     background: #fff;
     padding: 40px;
@@ -525,14 +525,14 @@ body.no-scroll {
   background: #fff;
   border-radius: 20px;
   width: 90%;
-  max-width: 70%;
-  max-height: 90vh;
-  overflow-y: auto;
+  max-width: 90%;
+  max-height: 90%;
   padding: 30px;
   position: relative;
   animation: slideIn 0.4s ease;
   box-shadow: 0 10px 40px rgba(0,0,0,0.1);
 }
+
 
 .close-btn {
   position: absolute;

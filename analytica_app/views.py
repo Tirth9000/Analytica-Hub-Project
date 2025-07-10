@@ -6,7 +6,7 @@ from utility.redis_utils import *
 from .main_tasks import *
 from templates import *
 import pandas as pd
-import requests, random, shutil, os
+import requests, os
 from uuid import uuid4
 
 
