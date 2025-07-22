@@ -98,3 +98,21 @@ body {
     width: 70px;
     height: 70px;
 }
+
+.custom-box {
+    width: 40%;
+    justify-content: flex-end;
+    border-radius: 15px;
+    word-break: break-word;
+    align-self: flex-start;
+    background-color: #333;
+    padding: 5px;
+    padding-bottom: 1px;
+}
+
+.custom-box img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: contain; /* Maintain aspect ratio */
+}
