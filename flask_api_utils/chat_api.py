@@ -1,4 +1,4 @@
-from flask import Flask, request, session, send_file, send_from_directory
+from flask import Flask, request 
 from flask_cors import CORS
 import pandasai as pai
 import os, pandas as pd
@@ -20,11 +20,6 @@ CORS(app, origins="*")
 
 app.config["SESSION_PERMANENT"] = False
 app.secret_key = "csv_client_key"
-
-import logging
-import sys
-app.logger.addHandler(logging.StreamHandler(sys.stdout))
-app.logger.setLevel(logging.DEBUG)
 
 
 @app.route('/chat-response', methods=['GET', 'POST'])
